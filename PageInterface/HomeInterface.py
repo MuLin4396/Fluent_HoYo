@@ -3,7 +3,7 @@ import os
 
 from PyQt5.QtCore import Qt, QEventLoop, QTimer, QCoreApplication
 from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy
-from qfluentwidgets import ComboBox, PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, InfoBarIcon, PrimaryPushButton, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView
+from qfluentwidgets import ComboBox, PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, InfoBarIcon, PrimaryPushButton, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, RoundMenu, ToolTipFilter, ToolTipPosition, Action
 
 class HomeInterface(QFrame):
 	def __init__(self, text: str):
@@ -35,10 +35,9 @@ class CompileAction:
 	def __init__(self, plain_TextEdit: PlainTextEdit):
 		self.text_edit = plain_TextEdit
 
-	def perform_Action(self):
-		for i in range(100):
-			self.text_edit.appendPlainText("编译按钮被点击了！" + str(i))
-			QCoreApplication.processEvents()
+	def perform_Action(self, text: str):
+		self.text_edit.appendPlainText(text)
+		QCoreApplication.processEvents()
 
 class TextEdit(HeaderCardWidget):
 	def __init__(self, parent=None):
@@ -61,7 +60,7 @@ class DisplayCard(HeaderCardWidget):
 
 		self.flipView = HorizontalFlipView(self)
 
-		self.LoadImage('images/DisPlay/','*.jpg')
+		self.LoadImage('images/DisPlay/', '*.jpg')
 
 		self.flipView.setBorderRadius(4)
 		self.flipView.setSpacing(5)
@@ -70,7 +69,7 @@ class DisplayCard(HeaderCardWidget):
 		self.viewLayout.addWidget(self.flipView)
 		self.viewLayout.setContentsMargins(10, 5, 10, 10)
 
-	def LoadImage(self,directory,pattern):
+	def LoadImage(self, directory, pattern):
 		for filename in os.listdir(directory):
 			if fnmatch.fnmatch(filename, pattern):
 				file_path = os.path.join(directory, filename)
@@ -96,15 +95,27 @@ class GeneralSetting(GroupHeaderCardWidget):
 		self.lineEdit_3.setPlaceholderText("输入")
 
 		self.hintIcon = IconWidget(InfoBarIcon.INFORMATION)
-		self.hintLabel = BodyLabel("点击运行按钮以开始运行 🤣👉")
-		self.compileButton = PrimaryPushButton(FluentIcon.PLAY_SOLID, "运行")
+		self.hintLabel = BodyLabel('点击开始运行 🤣👉')
+		self.compileButton = PrimarySplitPushButton("BanG Dream! It's MyGO!!!!!✨")
 		self.compile_Action = CompileAction(parent.plain_TextEdit)
+		self.menu_Button = RoundMenu(parent=self.compileButton)
+		self.compileButton.setFlyout(self.menu_Button)
+
+		self.compileButton.setToolTip("BanG Dream! It's MyGO!!!!!")
+		self.compileButton.installEventFilter(ToolTipFilter(self.compileButton, 0, ToolTipPosition.TOP))
+		self.compileButton.clicked.connect(lambda: self.compile_Action.perform_Action("迷子でもいい、迷子でも進め。"))
+		self.menu_Button.addActions([
+			Action('高松灯', triggered=lambda: self.compile_Action.perform_Action("是会虚情假意呢🙄️")),
+			Action('千早爱音', triggered=lambda: self.compile_Action.perform_Action("想演奏是你们的自由，你们就请便吧🖐")),
+			Action('要乐奈', triggered=lambda: self.compile_Action.perform_Action("到现在都还执着于过去，真难看🙄️")),
+			Action('长崎爽世', triggered=lambda: self.compile_Action.perform_Action("你也差不多该忘记了吧😒")),
+			Action('椎名立希', triggered=lambda: self.compile_Action.perform_Action("那么那个乐团算什么😅")),
+		]
+		)
 
 		self.bottomLayout = QHBoxLayout()
 
 		self.hintIcon.setFixedSize(16, 16)
-		self.compileButton.setFixedWidth(100)
-		self.compileButton.clicked.connect(self.compile_Action.perform_Action)
 		self.bottomLayout.setSpacing(10)
 		self.bottomLayout.setContentsMargins(24, 15, 24, 20)
 		self.bottomLayout.addWidget(self.hintIcon, 0, Qt.AlignLeft)
