@@ -86,22 +86,19 @@ class GeneralSetting(GroupHeaderCardWidget):
 		self.comboBox.addItems(["崩坏学园2", "崩坏3", "原神", "未定事件簿", "绝区零", "大别野"])
 
 		self.lineEdit_1 = LineEdit()
-		self.lineEdit_1.setFixedWidth(200)
-		self.lineEdit_1.setPlaceholderText("输入")
-
 		self.lineEdit_2 = LineEdit()
-		self.lineEdit_2.setFixedWidth(200)
-		self.lineEdit_2.setPlaceholderText("输入")
-
 		self.lineEdit_3 = LineEdit()
+		self.lineEdit_1.setFixedWidth(200)
+		self.lineEdit_2.setFixedWidth(200)
 		self.lineEdit_3.setFixedWidth(200)
+		self.lineEdit_1.setPlaceholderText("输入")
+		self.lineEdit_2.setPlaceholderText("输入")
 		self.lineEdit_3.setPlaceholderText("输入")
 
 		self.hintIcon = IconWidget(InfoBarIcon.INFORMATION)
 		self.hintLabel = BodyLabel("点击运行按钮以开始运行 🤣👉")
 		self.compileButton = PrimaryPushButton(FluentIcon.PLAY_SOLID, "运行")
 		self.compile_Action = CompileAction(parent.plain_TextEdit)
-		self.compileButton.clicked.connect(self.compile_Action.perform_Action)
 
 		self.bottomLayout = QHBoxLayout()
 
