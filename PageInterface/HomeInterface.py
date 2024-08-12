@@ -3,8 +3,8 @@ import os
 
 from PyQt5.QtCore import Qt, QCoreApplication
 from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy
-from qfluentwidgets import ComboBox, PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, InfoBarIcon, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, ToolTipFilter, ToolTipPosition, Action
-from qfluentwidgets.components.material import AcrylicSystemTrayMenu
+from qfluentwidgets import PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, InfoBarIcon, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, ToolTipFilter, ToolTipPosition, Action
+from qfluentwidgets.components.material import AcrylicSystemTrayMenu, AcrylicComboBox
 
 class HomeInterface(QFrame):
 	def __init__(self, text: str):
@@ -81,7 +81,7 @@ class GeneralSetting(GroupHeaderCardWidget):
 		super().__init__(parent)
 		self.setTitle("设置")
 
-		self.comboBox = ComboBox(self)
+		self.comboBox = AcrylicComboBox(self)
 		self.lineEdit_1 = LineEdit(self)
 		self.lineEdit_2 = LineEdit(self)
 		self.lineEdit_3 = LineEdit(self)
@@ -101,8 +101,8 @@ class GeneralSetting(GroupHeaderCardWidget):
 		self.compileButton = PrimarySplitPushButton("✨BanG Dream! It's MyGO!!!!!✨")
 		self.compile_Action = CompileAction(parent.plain_TextEdit)
 		self.menu_Button = AcrylicSystemTrayMenu(parent=self.compileButton)
+		self.hintIcon.setFixedSize(16, 16)
 		self.compileButton.setFlyout(self.menu_Button)
-
 		self.compileButton.setToolTip("BanG Dream! It's MyGO!!!!!")
 		self.compileButton.installEventFilter(ToolTipFilter(self.compileButton, 0, ToolTipPosition.TOP))
 		self.compileButton.clicked.connect(lambda: self.compile_Action.perform_Action("迷子でもいい、迷子でも進め。"))
@@ -117,8 +117,6 @@ class GeneralSetting(GroupHeaderCardWidget):
 		)
 
 		self.bottomLayout = QHBoxLayout()
-
-		self.hintIcon.setFixedSize(16, 16)
 		self.bottomLayout.setSpacing(10)
 		self.bottomLayout.setContentsMargins(24, 15, 24, 20)
 		self.bottomLayout.addWidget(self.hintIcon, 0, Qt.AlignLeft)
