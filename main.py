@@ -20,7 +20,7 @@ class MainWindow(FluentWindow):
 		self.resize(1400, 800)
 		self.setMinimumWidth(1400)
 		self.setMinimumHeight(800)
-		self.setWindowTitle("米游社评论区抓取工具")
+		self.setWindowTitle('米游社评论区抓取工具')
 		self.setWindowIcon(QIcon('images/HoYo.png'))
 		# 居中界面
 		desktop = QApplication.desktop().availableGeometry()
@@ -46,8 +46,8 @@ class MainWindow(FluentWindow):
 		# 加载子界面
 		self.initPageInterface()
 		# 侧边栏配置
-		self.addSubInterface(self.homeInterface, FluentIcon.HOME, "首页", NavigationItemPosition.TOP)
-		self.addSubInterface(self.settingInterface, FluentIcon.SETTING, "设置", NavigationItemPosition.BOTTOM)
+		self.addSubInterface(self.homeInterface, FluentIcon.HOME, '首页', NavigationItemPosition.TOP)
+		self.addSubInterface(self.settingInterface, FluentIcon.SETTING, '设置', NavigationItemPosition.BOTTOM)
 		self.navigationInterface.setExpandWidth(200)
 		# 1000ms延时
 		self.initDelay(2000)
@@ -55,8 +55,8 @@ class MainWindow(FluentWindow):
 	# 子界面
 	def initPageInterface(self):
 		# 加载子界面
-		self.homeInterface = HomeInterface("HomeInterface")
-		self.settingInterface = SettingInterface("SettingInterface")
+		self.homeInterface = HomeInterface('HomeInterface')
+		self.settingInterface = SettingInterface('SettingInterface')
 
 	# 延时
 	def initDelay(self, time: int):
