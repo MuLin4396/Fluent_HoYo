@@ -4,7 +4,7 @@ import os
 from PyQt5.QtCore import Qt, QCoreApplication
 from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy
 from qfluentwidgets import PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, InfoBarIcon, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, ToolTipFilter, ToolTipPosition, Action
-from qfluentwidgets.components.material import AcrylicSystemTrayMenu, AcrylicComboBox
+from qfluentwidgets.components.material import AcrylicSystemTrayMenu, AcrylicComboBox, AcrylicToolTipFilter
 
 class HomeInterface(QFrame):
 	def __init__(self, text: str):
@@ -43,7 +43,7 @@ class CompileAction:
 class TextEdit(HeaderCardWidget):
 	def __init__(self, parent=None):
 		super().__init__(parent)
-		self.setTitle('运行状态')
+		self.setTitle('📄  运 行')
 
 		self.plain_TextEdit = PlainTextEdit(self)
 		self.plain_TextEdit.setReadOnly(True)
@@ -57,7 +57,7 @@ class TextEdit(HeaderCardWidget):
 class DisplayCard(HeaderCardWidget):
 	def __init__(self, parent=None):
 		super().__init__(parent)
-		self.setTitle("图片")
+		self.setTitle("💖  插 图")
 
 		self.flipView = HorizontalFlipView(self)
 
@@ -79,7 +79,7 @@ class DisplayCard(HeaderCardWidget):
 class GeneralSetting(GroupHeaderCardWidget):
 	def __init__(self, parent=None):
 		super().__init__(parent)
-		self.setTitle("设置")
+		self.setTitle("⚙️  配 置")
 
 		self.comboBox = AcrylicComboBox(self)
 		self.lineEdit_1 = LineEdit(self)
@@ -104,7 +104,7 @@ class GeneralSetting(GroupHeaderCardWidget):
 		self.hintIcon.setFixedSize(16, 16)
 		self.compileButton.setFlyout(self.menu_Button)
 		self.compileButton.setToolTip("BanG Dream! It's MyGO!!!!!")
-		self.compileButton.installEventFilter(ToolTipFilter(self.compileButton, 0, ToolTipPosition.TOP))
+		self.compileButton.installEventFilter(AcrylicToolTipFilter(self.compileButton, 0, ToolTipPosition.TOP))
 		self.compileButton.clicked.connect(lambda: self.compile_Action.perform_Action("迷子でもいい、迷子でも進め。"))
 		self.menu_Button.addActions(
 				[
