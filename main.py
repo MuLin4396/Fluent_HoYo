@@ -34,10 +34,10 @@ class MainWindow(FluentWindow):
 		# 启动界面配置
 		self.splashScreen = SplashScreen(self.windowIcon(), self)
 		self.splashScreen.setIconSize(QSize(102, 102))
-		self.show()
 		# 100ms延时
 		self.initDelay(100)
 		# 加载侧边栏&关闭启动界面
+		self.show()
 		self.initNavigation()
 		self.splashScreen.finish()
 
@@ -50,7 +50,7 @@ class MainWindow(FluentWindow):
 		self.addSubInterface(self.settingInterface, FluentIcon.SETTING, "设置", NavigationItemPosition.BOTTOM)
 		self.navigationInterface.setExpandWidth(200)
 		# 1000ms延时
-		self.initDelay(900)
+		self.initDelay(2000)
 
 	# 子界面
 	def initPageInterface(self):
