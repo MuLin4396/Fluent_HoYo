@@ -3,7 +3,7 @@ import os
 
 from PyQt5.QtCore import Qt, QCoreApplication
 from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy
-from qfluentwidgets import PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, InfoBarIcon, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, ToolTipFilter, ToolTipPosition, Action
+from qfluentwidgets import PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, InfoBarIcon, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, ToolTipPosition, Action, SplitPushButton
 from qfluentwidgets.components.material import AcrylicSystemTrayMenu, AcrylicComboBox, AcrylicToolTipFilter
 
 class HomeInterface(QFrame):
@@ -48,6 +48,18 @@ class TextEdit(HeaderCardWidget):
 		self.plain_TextEdit = PlainTextEdit(self)
 		self.plain_TextEdit.setReadOnly(True)
 
+		self.menu_Button = AcrylicSystemTrayMenu(self)
+		self.action_1 = Action(FluentIcon.SEND, '全选')
+		self.action_2 = Action(FluentIcon.COPY, 'Copy')
+		self.action_3 = Action(FluentIcon.SAVE, 'Save')
+		self.menu_Button.addActions([self.action_1, self.action_2, self.action_3])
+
+		self.splitToolButton = SplitPushButton(FluentIcon.GITHUB.icon(), '清空', self)
+		self.splitToolButton.setFlyout(self.menu_Button)
+		self.splitToolButton.setToolTip("BanG Dream! It's MyGO!!!!!")
+		self.splitToolButton.installEventFilter(AcrylicToolTipFilter(self.splitToolButton, 0, ToolTipPosition.TOP))
+
+		self.headerLayout.addWidget(self.splitToolButton)
 		self.viewLayout.addWidget(self.plain_TextEdit)
 		self.viewLayout.setContentsMargins(10, 5, 10, 10)
 
@@ -96,34 +108,32 @@ class GeneralSetting(GroupHeaderCardWidget):
 		self.comboBox.addItems(["崩坏学园2", "崩坏3", "原神", "未定事件簿", "绝区零", "大别野", 'shoko 🥰', '西宫硝子', '宝多六花', '小鸟游六花'])
 		self.comboBox.setCurrentIndex(-1)
 
+		self.compile_Action = CompileAction(parent.plain_TextEdit)
+
+		self.menu_Button = AcrylicSystemTrayMenu(self)
+		self.action_1 = Action('高松灯', triggered=lambda: self.compile_Action.perform_Action("是会虚情假意呢🙄️"))
+		self.action_2 = Action('千早爱音', triggered=lambda: self.compile_Action.perform_Action("想演奏是你们的自由，你们就请便吧🖐"))
+		self.action_3 = Action('要乐奈', triggered=lambda: self.compile_Action.perform_Action("到现在都还执着于过去，真难看🙄️"))
+		self.action_4 = Action('长崎爽世', triggered=lambda: self.compile_Action.perform_Action("你也差不多该忘记了吧😒"))
+		self.action_5 = Action('椎名立希', triggered=lambda: self.compile_Action.perform_Action("那么那个乐团算什么😅"))
+		self.menu_Button.addActions([self.action_1, self.action_2, self.action_3, self.action_4, self.action_5])
+
 		self.hintIcon = IconWidget(InfoBarIcon.INFORMATION)
 		self.hintLabel = BodyLabel('点击开始运行 🤣👉')
 		self.compileButton = PrimarySplitPushButton("✨BanG Dream! It's MyGO!!!!!✨")
-		self.compile_Action = CompileAction(parent.plain_TextEdit)
-		self.menu_Button = AcrylicSystemTrayMenu(parent=self.compileButton)
 		self.hintIcon.setFixedSize(16, 16)
 		self.compileButton.setFlyout(self.menu_Button)
 		self.compileButton.setToolTip("BanG Dream! It's MyGO!!!!!")
 		self.compileButton.installEventFilter(AcrylicToolTipFilter(self.compileButton, 0, ToolTipPosition.TOP))
 		self.compileButton.clicked.connect(lambda: self.compile_Action.perform_Action("迷子でもいい、迷子でも進め。"))
-		self.menu_Button.addActions(
-				[
-					Action('高松灯', triggered=lambda: self.compile_Action.perform_Action("是会虚情假意呢🙄️")),
-					Action('千早爱音', triggered=lambda: self.compile_Action.perform_Action("想演奏是你们的自由，你们就请便吧🖐")),
-					Action('要乐奈', triggered=lambda: self.compile_Action.perform_Action("到现在都还执着于过去，真难看🙄️")),
-					Action('长崎爽世', triggered=lambda: self.compile_Action.perform_Action("你也差不多该忘记了吧😒")),
-					Action('椎名立希', triggered=lambda: self.compile_Action.perform_Action("那么那个乐团算什么😅")),
-				]
-		)
 
 		self.bottomLayout = QHBoxLayout()
 		self.bottomLayout.setSpacing(10)
 		self.bottomLayout.setContentsMargins(24, 15, 24, 20)
-		self.bottomLayout.addWidget(self.hintIcon, 0, Qt.AlignLeft)
-		self.bottomLayout.addWidget(self.hintLabel, 0, Qt.AlignLeft)
+		self.bottomLayout.addWidget(self.hintIcon)
+		self.bottomLayout.addWidget(self.hintLabel)
 		self.bottomLayout.addStretch(1)
-		self.bottomLayout.addWidget(self.compileButton, 0, Qt.AlignRight)
-		self.bottomLayout.setAlignment(Qt.AlignVCenter)
+		self.bottomLayout.addWidget(self.compileButton)
 
 		self.addGroup(FluentIcon.BACKGROUND_FILL, "选择分区", "选择评论区所在的分区", self.comboBox)
 		self.addGroup(FluentIcon.BACKGROUND_FILL, "动态ID", "选择软件的入口脚本", self.lineEdit_1)
