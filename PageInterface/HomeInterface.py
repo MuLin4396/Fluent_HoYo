@@ -79,7 +79,7 @@ class DisplayCard(HeaderCardWidget):
 		self.flipView.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
 		self.flipView.installEventFilter(AcrylicToolTipFilter(self.flipView, 0, ToolTipPosition.TOP))
 
-		self.LoadImage('images/DisPlay/', '*.jpg')
+		self.LoadImage('images/DisPlay.Jpg/', '*.jpg')
 		self.viewLayout.addWidget(self.flipView)
 		self.viewLayout.setContentsMargins(10, 5, 10, 10)
 

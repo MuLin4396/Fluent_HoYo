@@ -21,7 +21,7 @@ class MainWindow(FluentWindow):
 		self.setMinimumWidth(1400)
 		self.setMinimumHeight(800)
 		self.setWindowTitle('米游社评论区抓取工具')
-		self.setWindowIcon(QIcon('images/HoYo.png'))
+		self.setWindowIcon(QIcon('images/DisPlay.Png/HoYo.png'))
 		# 居中界面
 		desktop = QApplication.desktop().availableGeometry()
 		width, high = desktop.width(), desktop.height()
