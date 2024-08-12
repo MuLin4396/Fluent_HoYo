@@ -24,8 +24,8 @@ class MainWindow(FluentWindow):
 		self.setWindowIcon(QIcon('images/HoYo.png'))
 		# 居中界面
 		desktop = QApplication.desktop().availableGeometry()
-		width, heigh = desktop.width(), desktop.height()
-		self.move((width - self.width()) // 2, (heigh - self.height()) // 2)
+		width, high = desktop.width(), desktop.height()
+		self.move((width - self.width()) // 2, (high - self.height()) // 2)
 		# 加载启动界面
 		self.initSplashScreen()
 
@@ -35,8 +35,8 @@ class MainWindow(FluentWindow):
 		self.splashScreen = SplashScreen(self.windowIcon(), self)
 		self.splashScreen.setIconSize(QSize(102, 102))
 		self.show()
-		# 50ms延时
-		self.initDelay(50)
+		# 100ms延时
+		self.initDelay(100)
 		# 加载侧边栏&关闭启动界面
 		self.initNavigation()
 		self.splashScreen.finish()
@@ -50,7 +50,7 @@ class MainWindow(FluentWindow):
 		self.addSubInterface(self.settingInterface, FluentIcon.SETTING, "设置", NavigationItemPosition.BOTTOM)
 		self.navigationInterface.setExpandWidth(200)
 		# 1000ms延时
-		self.initDelay(1000)
+		self.initDelay(900)
 
 	# 子界面
 	def initPageInterface(self):
