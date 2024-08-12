@@ -1,9 +1,10 @@
 import fnmatch
 import os
 
-from PyQt5.QtCore import Qt, QEventLoop, QTimer, QCoreApplication
+from PyQt5.QtCore import Qt, QCoreApplication
 from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy
-from qfluentwidgets import ComboBox, PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, InfoBarIcon, PrimaryPushButton, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, RoundMenu, ToolTipFilter, ToolTipPosition, Action
+from qfluentwidgets import ComboBox, PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, InfoBarIcon, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, ToolTipFilter, ToolTipPosition, Action
+from qfluentwidgets.components.material import AcrylicSystemTrayMenu
 
 class HomeInterface(QFrame):
 	def __init__(self, text: str):
@@ -80,37 +81,39 @@ class GeneralSetting(GroupHeaderCardWidget):
 		super().__init__(parent)
 		self.setTitle("设置")
 
-		self.comboBox = ComboBox()
+		self.comboBox = ComboBox(self)
+		self.lineEdit_1 = LineEdit(self)
+		self.lineEdit_2 = LineEdit(self)
+		self.lineEdit_3 = LineEdit(self)
 		self.comboBox.setFixedWidth(200)
-		self.comboBox.addItems(["崩坏学园2", "崩坏3", "原神", "未定事件簿", "绝区零", "大别野"])
-
-		self.lineEdit_1 = LineEdit()
-		self.lineEdit_2 = LineEdit()
-		self.lineEdit_3 = LineEdit()
 		self.lineEdit_1.setFixedWidth(200)
 		self.lineEdit_2.setFixedWidth(200)
 		self.lineEdit_3.setFixedWidth(200)
+		self.comboBox.setPlaceholderText("选择")
 		self.lineEdit_1.setPlaceholderText("输入")
 		self.lineEdit_2.setPlaceholderText("输入")
 		self.lineEdit_3.setPlaceholderText("输入")
+		self.comboBox.addItems(["崩坏学园2", "崩坏3", "原神", "未定事件簿", "绝区零", "大别野", 'shoko 🥰', '西宫硝子', '宝多六花', '小鸟游六花'])
+		self.comboBox.setCurrentIndex(-1)
 
 		self.hintIcon = IconWidget(InfoBarIcon.INFORMATION)
 		self.hintLabel = BodyLabel('点击开始运行 🤣👉')
-		self.compileButton = PrimarySplitPushButton("BanG Dream! It's MyGO!!!!!✨")
+		self.compileButton = PrimarySplitPushButton("✨BanG Dream! It's MyGO!!!!!✨")
 		self.compile_Action = CompileAction(parent.plain_TextEdit)
-		self.menu_Button = RoundMenu(parent=self.compileButton)
+		self.menu_Button = AcrylicSystemTrayMenu(parent=self.compileButton)
 		self.compileButton.setFlyout(self.menu_Button)
 
 		self.compileButton.setToolTip("BanG Dream! It's MyGO!!!!!")
 		self.compileButton.installEventFilter(ToolTipFilter(self.compileButton, 0, ToolTipPosition.TOP))
 		self.compileButton.clicked.connect(lambda: self.compile_Action.perform_Action("迷子でもいい、迷子でも進め。"))
-		self.menu_Button.addActions([
-			Action('高松灯', triggered=lambda: self.compile_Action.perform_Action("是会虚情假意呢🙄️")),
-			Action('千早爱音', triggered=lambda: self.compile_Action.perform_Action("想演奏是你们的自由，你们就请便吧🖐")),
-			Action('要乐奈', triggered=lambda: self.compile_Action.perform_Action("到现在都还执着于过去，真难看🙄️")),
-			Action('长崎爽世', triggered=lambda: self.compile_Action.perform_Action("你也差不多该忘记了吧😒")),
-			Action('椎名立希', triggered=lambda: self.compile_Action.perform_Action("那么那个乐团算什么😅")),
-		]
+		self.menu_Button.addActions(
+				[
+					Action('高松灯', triggered=lambda: self.compile_Action.perform_Action("是会虚情假意呢🙄️")),
+					Action('千早爱音', triggered=lambda: self.compile_Action.perform_Action("想演奏是你们的自由，你们就请便吧🖐")),
+					Action('要乐奈', triggered=lambda: self.compile_Action.perform_Action("到现在都还执着于过去，真难看🙄️")),
+					Action('长崎爽世', triggered=lambda: self.compile_Action.perform_Action("你也差不多该忘记了吧😒")),
+					Action('椎名立希', triggered=lambda: self.compile_Action.perform_Action("那么那个乐团算什么😅")),
+				]
 		)
 
 		self.bottomLayout = QHBoxLayout()
