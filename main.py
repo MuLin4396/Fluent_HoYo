@@ -64,7 +64,7 @@ class MainWindow(FluentWindow):
 		QTimer.singleShot(time, loop.quit)
 		loop.exec()
 
-class HighDpiScaleFactorRoundingPolicy():
+class HighDpiScaleFactorRoundingPolicy:
 	def __init__(self):
 		super().__init__()
 		# 自适应分辨率
@@ -80,5 +80,5 @@ def main():
 	window.show()
 	sys.exit(app.exec_())
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 	main()
