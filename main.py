@@ -81,5 +81,9 @@ def main():
 	window.show()
 	sys.exit(app.exec_())
 
+# pyinstaller -i .\Images\DisPlay_Png\HoYo.png -w -F .\main.py
+# name = 'Fluent_HoYo_Window',
+# pyinstaller  main.spec
+
 if __name__ == '__main__':
 	main()
