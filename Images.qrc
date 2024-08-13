@@ -1,0 +1,26 @@
+<RCC>
+    <qresource>
+        <file>Images/DisPlay_Png/AiLi_KeYin.png</file>
+        <file>Images/DisPlay_Png/FuNingNa.png</file>
+        <file>Images/DisPlay_Png/FuNingNa_MingZuo.png</file>
+        <file>Images/DisPlay_Png/HoYo.png</file>
+        <file>Images/DisPlay_Png/KeQing_MingZuo.png</file>
+        <file>Images/DisPlay_Png/SR.png</file>
+        <file>Images/DisPlay_Png/WenDi_MingZuo.png</file>
+        <file>Images/DisPlay_Jpg/三月七.jpg</file>
+        <file>Images/DisPlay_Jpg/三月妻.jpg</file>
+        <file>Images/DisPlay_Jpg/卡芙卡.jpg</file>
+        <file>Images/DisPlay_Jpg/布洛妮娅.jpg</file>
+        <file>Images/DisPlay_Jpg/希儿.jpg</file>
+        <file>Images/DisPlay_Jpg/归终.jpg</file>
+        <file>Images/DisPlay_Jpg/流萤.jpg</file>
+        <file>Images/DisPlay_Jpg/纳西妲.jpg</file>
+        <file>Images/DisPlay_Jpg/绮良良.jpg</file>
+        <file>Images/DisPlay_Jpg/羽毛笔.jpg</file>
+        <file>Images/DisPlay_Jpg/芙宁娜.jpg</file>
+        <file>Images/DisPlay_Jpg/萤门永存.jpg</file>
+        <file>Images/DisPlay_Jpg/银狼.jpg</file>
+        <file>Images/DisPlay_Jpg/镜流.jpg</file>
+        <file>Images/DisPlay_Jpg/黑塔.jpg</file>
+    </qresource>
+</RCC>

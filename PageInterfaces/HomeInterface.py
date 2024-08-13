@@ -1,7 +1,5 @@
-import fnmatch
-import os
-
-from PyQt5.QtCore import Qt, QCoreApplication
+from PyQt5.QtCore import Qt, QCoreApplication, QDir
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy
 from qfluentwidgets import PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, InfoBarIcon, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, ToolTipPosition, Action, SplitPushButton
 from qfluentwidgets.components.material import AcrylicSystemTrayMenu, AcrylicComboBox, AcrylicToolTipFilter
@@ -79,17 +77,19 @@ class DisplayCard(HeaderCardWidget):
 		self.flipView.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
 		self.flipView.installEventFilter(AcrylicToolTipFilter(self.flipView, 0, ToolTipPosition.TOP))
 
-		self.LoadImage('Images/DisPlay_Png/', '*.Png')
-		self.LoadImage('Images/DisPlay_Jpg/', '*.jpg')
+		self.LoadImage(':Images/DisPlay_Png/', '*.png')
+		self.LoadImage(':Images/DisPlay_Jpg/', '*.jpg')
 
 		self.viewLayout.addWidget(self.flipView)
 		self.viewLayout.setContentsMargins(10, 5, 10, 10)
 
 	def LoadImage(self, directory, pattern):
-		for filename in os.listdir(directory):
-			if fnmatch.fnmatch(filename, pattern):
-				file_path = os.path.join(directory, filename)
-				self.flipView.addImage(file_path)
+		direct = QDir(directory)
+		files = direct.entryList([pattern], QDir.Files)
+		for filename in files:
+			file_path = f"{directory}{filename}"
+			pixmap = QPixmap(file_path)
+			self.flipView.addImage(pixmap)
 
 class GeneralSetting(GroupHeaderCardWidget):
 	def __init__(self, parent=None):
