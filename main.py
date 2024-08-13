@@ -5,8 +5,8 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
 from qfluentwidgets import FluentWindow, setTheme, Theme, SplashScreen, FluentIcon, NavigationItemPosition
 
-from PageInterface.HomeInterface import HomeInterface
-from PageInterface.SettingInterface import SettingInterface
+from PageInterfaces.HomeInterface import HomeInterface
+from PageInterfaces.SettingInterface import SettingInterface
 
 class MainWindow(FluentWindow):
 	def __init__(self):
@@ -21,7 +21,7 @@ class MainWindow(FluentWindow):
 		self.setMinimumWidth(1400)
 		self.setMinimumHeight(800)
 		self.setWindowTitle('米游社评论区抓取工具')
-		self.setWindowIcon(QIcon('images/DisPlay.Png/HoYo.png'))
+		self.setWindowIcon(QIcon('Images/DisPlay.Png/HoYo.png'))
 		# 居中界面
 		desktop = QApplication.desktop().availableGeometry()
 		width, high = desktop.width(), desktop.height()
