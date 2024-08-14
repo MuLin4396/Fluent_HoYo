@@ -1,9 +1,10 @@
+import re
+import json
 import asyncio
 import openpyxl
+
 from PyQt5.QtCore import QCoreApplication
 from aiohttp import ClientSession, ClientTimeout, ClientError
-import json
-import re
 from datetime import datetime
 
 headers = {
