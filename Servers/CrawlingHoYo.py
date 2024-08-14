@@ -31,7 +31,7 @@ async def fetch(session, url):
 				print(f"请求失败，重试次数已用完：{e}")
 				raise
 
-async def spider_main(inputID, inputRequest, inputSave):
+async def spider_main(inputID, inputRequest, inputSave, compileAction):
 	last_id = '0'
 	timeout = ClientTimeout(total=120)
 	count = 0
@@ -80,7 +80,7 @@ async def spider_main(inputID, inputRequest, inputSave):
 					count = 0
 					print('保存了一次工作簿')
 
-				print(time, floor_id)
-				print(c)
+				compileAction.perform_Action(f'{time}	{floor_id}')
+				compileAction.perform_Action(f'{c}')
 
 		workbook.save('spider_data.xlsx')
