@@ -64,10 +64,6 @@ class TextEdit(HeaderCardWidget):
 
 		self.plain_TextEdit = PlainTextEdit(self)
 		self.plain_TextEdit.setReadOnly(True)
-		# self.splitToolButton.setFlyout(self.menu_Button)
-		# self.splitToolButton.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
-		# self.splitToolButton.installEventFilter(AcrylicToolTipFilter(self.splitToolButton, 0, ToolTipPosition.TOP))
-		# self.headerLayout.addWidget(self.splitToolButton)
 
 		self.plain_TextEdit.setContextMenuPolicy(Qt.CustomContextMenu)
 		self.plain_TextEdit.customContextMenuRequested.connect(self.showCommandBar)
