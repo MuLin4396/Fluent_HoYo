@@ -1,4 +1,5 @@
 import asyncio
+import threading
 
 from PyQt5.QtCore import Qt, QCoreApplication, QDir
 from PyQt5.QtGui import QPixmap, QIntValidator
@@ -43,6 +44,10 @@ class CompileAction:
 		QCoreApplication.processEvents()
 
 	def runFunction(self):
+		thread = threading.Thread(target=self.runAsyncTask)
+		thread.start()
+
+	def runAsyncTask(self):
 		inputID = self.general_Setting.lineEdit_1.text()
 		inputRequest = self.general_Setting.lineEdit_2.text()
 		inputSave = self.general_Setting.lineEdit_3.text()
@@ -52,9 +57,22 @@ class CompileAction:
 		if bool(inputID) & bool(inputRequest) & bool(inputSave):
 			asyncio.run(spider_main(inputID, inputRequest, inputSave, self))
 			QCoreApplication.processEvents()
-		# self.performAction('T')
 		else:
 			self.performAction('F')
+
+# def runFunction(self):
+# 	inputID = self.general_Setting.lineEdit_1.text()
+# 	inputRequest = self.general_Setting.lineEdit_2.text()
+# 	inputSave = self.general_Setting.lineEdit_3.text()
+# 	self.performAction(f'动态ID值:{inputID}')
+# 	self.performAction(f'单次请求数:{inputRequest}')
+# 	self.performAction(f'单轮保存数:{inputSave}')
+# 	if bool(inputID) & bool(inputRequest) & bool(inputSave):
+# 		asyncio.run(spider_main(inputID, inputRequest, inputSave, self))
+# 		QCoreApplication.processEvents()
+# 	# self.performAction('T')
+# 	else:
+# 		self.performAction('F')
 
 class TextEdit(HeaderCardWidget):
 	def __init__(self, parent=None):
@@ -62,8 +80,9 @@ class TextEdit(HeaderCardWidget):
 		self.setTitle('📄  运 行')
 
 		self.plain_TextEdit = PlainTextEdit(self)
-		self.plain_TextEdit.setReadOnly(True)
+		self.scrollbar = self.plain_TextEdit.verticalScrollBar()
 
+		self.plain_TextEdit.setReadOnly(True)
 		self.plain_TextEdit.setContextMenuPolicy(Qt.CustomContextMenu)
 		self.plain_TextEdit.customContextMenuRequested.connect(self.showCommandBar)
 
@@ -72,6 +91,7 @@ class TextEdit(HeaderCardWidget):
 
 	def appendPlainText(self, text):
 		self.plain_TextEdit.appendPlainText(text)
+		self.scrollbar.setValue(self.scrollbar.maximum())
 
 	def showCommandBar(self, pos):
 		commandBarView = CommandBarView(self)
