@@ -16,22 +16,21 @@ class HomeInterface(QFrame):
 		self.plain_TextEdit = TextEdit(self)
 		self.general_Setting = GeneralSetting(self)
 		self.display_Card = DisplayCard(self)
-
 		self.horizontalLayout_1 = QHBoxLayout()
 		self.horizontalLayout_2 = QHBoxLayout(self)
 		self.verticalLayout_1 = QVBoxLayout()
+
+		self.general_Setting.setFixedWidth(500)
+		self.display_Card.setFixedWidth(500)
+		self.plain_TextEdit.setBorderRadius(8)
+		self.general_Setting.setBorderRadius(8)
+		self.display_Card.setBorderRadius(8)
 
 		self.horizontalLayout_1.addLayout(self.verticalLayout_1)
 		self.horizontalLayout_1.addWidget(self.plain_TextEdit)
 		self.horizontalLayout_2.addLayout(self.horizontalLayout_1)
 		self.verticalLayout_1.addWidget(self.general_Setting)
 		self.verticalLayout_1.addWidget(self.display_Card)
-
-		self.general_Setting.setFixedWidth(500)
-		self.display_Card.setFixedWidth(500)
-		self.horizontalLayout_2.setContentsMargins(20, 20, 20, 23)
-
-		self.verticalLayout_1.setContentsMargins(-1, -1, 15, -1)
 		self.verticalLayout_1.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
 class CompileAction:
