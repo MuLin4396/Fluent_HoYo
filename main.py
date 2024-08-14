@@ -4,12 +4,12 @@ import Images
 from PyQt5.QtCore import QSize, QEventLoop, QTimer, Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
-from qfluentwidgets import FluentWindow, setTheme, Theme, SplashScreen, FluentIcon, NavigationItemPosition
+from qfluentwidgets import MSFluentWindow, setTheme, Theme, SplashScreen, FluentIcon, NavigationItemPosition
 
 from PageInterfaces.HomeInterface import HomeInterface
 from PageInterfaces.SettingInterface import SettingInterface
 
-class MainWindow(FluentWindow):
+class MainWindow(MSFluentWindow):
 	def __init__(self):
 		super().__init__()
 		self.initWindow()
@@ -47,9 +47,8 @@ class MainWindow(FluentWindow):
 		# 加载子界面
 		self.initPageInterface()
 		# 侧边栏配置
-		self.addSubInterface(self.homeInterface, FluentIcon.HOME, '首页', NavigationItemPosition.TOP)
-		self.addSubInterface(self.settingInterface, FluentIcon.SETTING, '设置', NavigationItemPosition.BOTTOM)
-		self.navigationInterface.setExpandWidth(200)
+		self.addSubInterface(self.homeInterface, FluentIcon.HOME, '首页', FluentIcon.HOME_FILL, NavigationItemPosition.TOP)
+		self.addSubInterface(self.settingInterface, FluentIcon.SETTING, '设置', FluentIcon.SEND_FILL, NavigationItemPosition.BOTTOM)
 		# 1000ms延时
 		self.initDelay(2000)
 
