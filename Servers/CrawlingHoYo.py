@@ -17,7 +17,7 @@ def record_message(sheet, uid, ip, nickname, floor_id, time, content):
 	row = [f'{nickname}', f'{uid}', f'{ip}', f'{floor_id}', f'{time}', f'{content}']
 	sheet.append(row)
 
-async def fetch(session, url):
+async def fetch(session, url, compileAction):
 	retries = 3
 	for i in range(retries):
 		try:
@@ -25,10 +25,10 @@ async def fetch(session, url):
 				return await response.json()
 		except (ClientError, asyncio.TimeoutError) as e:
 			if i < retries - 1:
-				print(f"请求失败，正在重试...（{i + 1}/{retries}）")
+				compileAction.performAction(f"请求失败，正在重试...（{i + 1}/{retries}）")
 				await asyncio.sleep(2)
 			else:
-				print(f"请求失败，重试次数已用完：{e}")
+				compileAction.performAction(f"请求失败，重试次数已用完：{e}")
 				raise
 
 async def spider_main(inputID, inputRequest, inputSave, compileAction):
@@ -49,7 +49,7 @@ async def spider_main(inputID, inputRequest, inputSave, compileAction):
 	async with ClientSession(headers=headers, timeout=timeout) as session:
 		while True:
 			url = f'https://bbs-api.miyoushe.com/post/wapi/getPostReplies?gids=2&is_hot=false&last_id={last_id}&order_type=1&post_id={inputID}&size={inputRequest}'
-			response = await fetch(session, url)
+			response = await fetch(session, url, compileAction)
 			list = response['data']['list']
 
 			if not list:
@@ -80,7 +80,7 @@ async def spider_main(inputID, inputRequest, inputSave, compileAction):
 					count = 0
 					print('保存了一次工作簿')
 
-				compileAction.perform_Action(f'{time}	{floor_id}')
-				compileAction.perform_Action(f'{c}')
+				compileAction.performAction(f'{time}    {floor_id}')
+				compileAction.performAction(f'{c}')
 
 		workbook.save('spider_data.xlsx')

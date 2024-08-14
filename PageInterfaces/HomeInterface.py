@@ -39,22 +39,23 @@ class CompileAction:
 		self.plain_TextEdit = plain_TextEdit
 		self.general_Setting = general_Setting
 
-	def perform_Action(self, text):
+	def performAction(self, text):
 		self.plain_TextEdit.appendPlainText(text)
 		QCoreApplication.processEvents()
 
-	def run_function(self):
+	def runFunction(self):
 		inputID = self.general_Setting.lineEdit_1.text()
 		inputRequest = self.general_Setting.lineEdit_2.text()
 		inputSave = self.general_Setting.lineEdit_3.text()
-		self.perform_Action(f'动态ID值:{inputID}')
-		self.perform_Action(f'单次请求数:{inputRequest}')
-		self.perform_Action(f'单轮保存数:{inputSave}')
-		if len(inputID) & len(inputRequest) & len(inputSave):
+		self.performAction(f'动态ID值:{inputID}')
+		self.performAction(f'单次请求数:{inputRequest}')
+		self.performAction(f'单轮保存数:{inputSave}')
+		if bool(inputID) & bool(inputRequest) & bool(inputSave):
 			asyncio.run(spider_main(inputID, inputRequest, inputSave, self))
 			QCoreApplication.processEvents()
+		# self.performAction('T')
 		else:
-			self.perform_Action('为空，错误')
+			self.performAction('F')
 
 class TextEdit(HeaderCardWidget):
 	def __init__(self, parent=None):
@@ -143,11 +144,11 @@ class GeneralSetting(GroupHeaderCardWidget):
 		self.compile_Action = CompileAction(parent.plain_TextEdit, self)
 
 		self.menu_Button = AcrylicSystemTrayMenu(self)
-		self.action_1 = Action('✨高松灯', triggered=lambda: self.compile_Action.perform_Action('是会虚情假意呢🙄️'))
-		self.action_2 = Action('✨千早爱音', triggered=lambda: self.compile_Action.perform_Action('想演奏是你们的自由，你们就请便吧🖐'))
-		self.action_3 = Action('✨要乐奈', triggered=lambda: self.compile_Action.perform_Action('到现在都还执着于过去，真难看🙄️'))
-		self.action_4 = Action('✨长崎爽世', triggered=lambda: self.compile_Action.perform_Action('你也差不多该忘记了吧😒'))
-		self.action_5 = Action('✨椎名立希', triggered=lambda: self.compile_Action.perform_Action('那么那个乐团算什么😅'))
+		self.action_1 = Action('✨高松灯', triggered=lambda: self.compile_Action.performAction('是会虚情假意呢🙄️'))
+		self.action_2 = Action('✨千早爱音', triggered=lambda: self.compile_Action.performAction('想演奏是你们的自由，你们就请便吧🖐'))
+		self.action_3 = Action('✨要乐奈', triggered=lambda: self.compile_Action.performAction('到现在都还执着于过去，真难看🙄️'))
+		self.action_4 = Action('✨长崎爽世', triggered=lambda: self.compile_Action.performAction('你也差不多该忘记了吧😒'))
+		self.action_5 = Action('✨椎名立希', triggered=lambda: self.compile_Action.performAction('那么那个乐团算什么😅'))
 		self.menu_Button.addActions([self.action_1, self.action_2, self.action_3, self.action_4, self.action_5])
 
 		self.hintIcon = IconWidget(InfoBarIcon.INFORMATION)
@@ -157,7 +158,7 @@ class GeneralSetting(GroupHeaderCardWidget):
 		self.compileButton.setFlyout(self.menu_Button)
 		self.compileButton.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
 		self.compileButton.installEventFilter(AcrylicToolTipFilter(self.compileButton, 0, ToolTipPosition.TOP))
-		self.compileButton.clicked.connect(self.compile_Action.run_function)
+		self.compileButton.clicked.connect(self.compile_Action.runFunction)
 
 		self.bottomLayout = QHBoxLayout()
 		self.bottomLayout.setSpacing(10)
