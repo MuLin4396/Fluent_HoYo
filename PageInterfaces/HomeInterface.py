@@ -50,8 +50,11 @@ class CompileAction:
 		self.perform_Action(f'动态ID值:{inputID}')
 		self.perform_Action(f'单次请求数:{inputRequest}')
 		self.perform_Action(f'单轮保存数:{inputSave}')
-		asyncio.run(spider_main(inputID, inputRequest, inputSave))
-		QCoreApplication.processEvents()
+		if len(inputID) & len(inputRequest) & len(inputSave):
+			asyncio.run(spider_main(inputID, inputRequest, inputSave, self))
+			QCoreApplication.processEvents()
+		else:
+			self.perform_Action('为空，错误')
 
 class TextEdit(HeaderCardWidget):
 	def __init__(self, parent=None):
