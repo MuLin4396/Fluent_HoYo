@@ -3,7 +3,7 @@ import asyncio
 from PyQt5.QtCore import Qt, QCoreApplication, QDir
 from PyQt5.QtGui import QPixmap, QIntValidator
 from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy
-from qfluentwidgets import PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, InfoBarIcon, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, ToolTipPosition, Action, SplitPushButton
+from qfluentwidgets import PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, InfoBarIcon, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, ToolTipPosition, Action, CommandBarView, FlyoutAnimationType, Flyout
 from qfluentwidgets.components.material import AcrylicSystemTrayMenu, AcrylicComboBox, AcrylicToolTipFilter
 
 from Servers.CrawlingHoYo import spider_main
@@ -64,24 +64,30 @@ class TextEdit(HeaderCardWidget):
 
 		self.plain_TextEdit = PlainTextEdit(self)
 		self.plain_TextEdit.setReadOnly(True)
+		# self.splitToolButton.setFlyout(self.menu_Button)
+		# self.splitToolButton.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
+		# self.splitToolButton.installEventFilter(AcrylicToolTipFilter(self.splitToolButton, 0, ToolTipPosition.TOP))
+		# self.headerLayout.addWidget(self.splitToolButton)
 
-		self.menu_Button = AcrylicSystemTrayMenu(self)
-		self.action_1 = Action(FluentIcon.PAUSE, '全选')
-		self.action_2 = Action(FluentIcon.COPY, 'Copy')
-		self.action_3 = Action(FluentIcon.SAVE, 'Save')
-		self.menu_Button.addActions([self.action_1, self.action_2, self.action_3])
+		self.plain_TextEdit.setContextMenuPolicy(Qt.CustomContextMenu)
+		self.plain_TextEdit.customContextMenuRequested.connect(self.showCommandBar)
 
-		self.splitToolButton = SplitPushButton(FluentIcon.PAUSE, '清空', self)
-		self.splitToolButton.setFlyout(self.menu_Button)
-		self.splitToolButton.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
-		self.splitToolButton.installEventFilter(AcrylicToolTipFilter(self.splitToolButton, 0, ToolTipPosition.TOP))
-
-		self.headerLayout.addWidget(self.splitToolButton)
 		self.viewLayout.addWidget(self.plain_TextEdit)
 		self.viewLayout.setContentsMargins(10, 5, 10, 10)
 
 	def appendPlainText(self, text):
 		self.plain_TextEdit.appendPlainText(text)
+
+	def showCommandBar(self, pos):
+		commandBarView = CommandBarView(self)
+		commandBarView.addAction(Action(FluentIcon.SHARE, 'Share'))
+		commandBarView.addSeparator()
+		commandBarView.addAction(Action(FluentIcon.SAVE, 'Save'))
+		commandBarView.addAction(Action(FluentIcon.DELETE, 'Delete'))
+		commandBarView.addHiddenAction(Action(FluentIcon.APPLICATION, 'App', shortcut='Ctrl+A'))
+		commandBarView.addHiddenAction(Action(FluentIcon.SETTING, 'Settings', shortcut='Ctrl+S'))
+		commandBarView.resizeToSuitableWidth()
+		Flyout.make(commandBarView, self.mapToGlobal(pos), self, FlyoutAnimationType.FADE_IN)
 
 class DisplayCard(HeaderCardWidget):
 	def __init__(self, parent=None):
