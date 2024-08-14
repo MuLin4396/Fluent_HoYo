@@ -48,7 +48,7 @@ class MainWindow(MSFluentWindow):
 		self.initPageInterface()
 		# 侧边栏配置
 		self.addSubInterface(self.homeInterface, FluentIcon.HOME, '首页', FluentIcon.HOME_FILL, NavigationItemPosition.TOP)
-		self.addSubInterface(self.settingInterface, FluentIcon.SETTING, '设置', FluentIcon.SEND_FILL, NavigationItemPosition.BOTTOM)
+		self.addSubInterface(self.settingInterface, FluentIcon.SETTING, '设置', FluentIcon.SETTING, NavigationItemPosition.BOTTOM)
 		# 1000ms延时
 		self.initDelay(2000)
 
