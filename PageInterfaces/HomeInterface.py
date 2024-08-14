@@ -1,8 +1,12 @@
+import asyncio
+
 from PyQt5.QtCore import Qt, QCoreApplication, QDir
 from PyQt5.QtGui import QPixmap, QIntValidator
 from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy
 from qfluentwidgets import PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, InfoBarIcon, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, ToolTipPosition, Action, SplitPushButton
 from qfluentwidgets.components.material import AcrylicSystemTrayMenu, AcrylicComboBox, AcrylicToolTipFilter
+
+from Servers.CrawlingHoYo import spider_main
 
 class HomeInterface(QFrame):
 	def __init__(self, text: str):
@@ -40,12 +44,14 @@ class CompileAction:
 		QCoreApplication.processEvents()
 
 	def run_function(self):
-		text1 = self.general_Setting.lineEdit_1.text()
-		text2 = self.general_Setting.lineEdit_2.text()
-		text3 = self.general_Setting.lineEdit_3.text()
-		self.perform_Action(f"动态ID值:{text1}")
-		self.perform_Action(f"单次请求数:{text2}")
-		self.perform_Action(f"单轮保存数:{text3}")
+		inputID = self.general_Setting.lineEdit_1.text()
+		inputRequest = self.general_Setting.lineEdit_2.text()
+		inputSave = self.general_Setting.lineEdit_3.text()
+		self.perform_Action(f'动态ID值:{inputID}')
+		self.perform_Action(f'单次请求数:{inputRequest}')
+		self.perform_Action(f'单轮保存数:{inputSave}')
+		asyncio.run(spider_main(inputID, inputRequest, inputSave))
+		QCoreApplication.processEvents()
 
 class TextEdit(HeaderCardWidget):
 	def __init__(self, parent=None):
@@ -56,12 +62,12 @@ class TextEdit(HeaderCardWidget):
 		self.plain_TextEdit.setReadOnly(True)
 
 		self.menu_Button = AcrylicSystemTrayMenu(self)
-		self.action_1 = Action(FluentIcon.SEND, '全选')
+		self.action_1 = Action(FluentIcon.PAUSE, '全选')
 		self.action_2 = Action(FluentIcon.COPY, 'Copy')
 		self.action_3 = Action(FluentIcon.SAVE, 'Save')
 		self.menu_Button.addActions([self.action_1, self.action_2, self.action_3])
 
-		self.splitToolButton = SplitPushButton(FluentIcon.GITHUB.icon(), '清空', self)
+		self.splitToolButton = SplitPushButton(FluentIcon.PAUSE, '清空', self)
 		self.splitToolButton.setFlyout(self.menu_Button)
 		self.splitToolButton.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
 		self.splitToolButton.installEventFilter(AcrylicToolTipFilter(self.splitToolButton, 0, ToolTipPosition.TOP))
@@ -79,10 +85,10 @@ class DisplayCard(HeaderCardWidget):
 		self.setTitle('💖  插 图')
 
 		self.flipView = HorizontalFlipView(self)
+
 		self.flipView.setBorderRadius(4)
 		self.flipView.setSpacing(5)
 		self.flipView.setAspectRatioMode(Qt.AspectRatioMode.KeepAspectRatio)
-
 		self.flipView.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
 		self.flipView.installEventFilter(AcrylicToolTipFilter(self.flipView, 0, ToolTipPosition.TOP))
 
@@ -96,7 +102,7 @@ class DisplayCard(HeaderCardWidget):
 		direct = QDir(directory)
 		files = direct.entryList([pattern], QDir.Files)
 		for filename in files:
-			file_path = f"{directory}{filename}"
+			file_path = f'{directory}{filename}'
 			pixmap = QPixmap(file_path)
 			self.flipView.addImage(pixmap)
 
@@ -113,7 +119,7 @@ class GeneralSetting(GroupHeaderCardWidget):
 		self.lineEdit_1.setFixedWidth(200)
 		self.lineEdit_2.setFixedWidth(200)
 		self.lineEdit_3.setFixedWidth(200)
-		self.comboBox.setPlaceholderText('✨选择分区虽然不生效')
+		self.comboBox.setPlaceholderText('✨选择分区不生效')
 		self.lineEdit_1.setPlaceholderText('✨输入评论区ID')
 		self.lineEdit_2.setPlaceholderText('✨输入≤50的正整数')
 		self.lineEdit_3.setPlaceholderText('✨输入1W-10W的正整数')
@@ -124,10 +130,10 @@ class GeneralSetting(GroupHeaderCardWidget):
 		self.lineEdit_1.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
 		self.lineEdit_2.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
 		self.lineEdit_3.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
+		self.comboBox.installEventFilter(AcrylicToolTipFilter(self.comboBox, 0, ToolTipPosition.TOP))
 		self.lineEdit_1.installEventFilter(AcrylicToolTipFilter(self.lineEdit_1, 0, ToolTipPosition.TOP))
 		self.lineEdit_2.installEventFilter(AcrylicToolTipFilter(self.lineEdit_2, 0, ToolTipPosition.TOP))
 		self.lineEdit_3.installEventFilter(AcrylicToolTipFilter(self.lineEdit_3, 0, ToolTipPosition.TOP))
-		self.comboBox.installEventFilter(AcrylicToolTipFilter(self.comboBox, 0, ToolTipPosition.TOP))
 		self.comboBox.addItems(['✨崩坏学园2', '✨崩坏3', '✨原神', '✨未定事件簿', '✨绝区零', '✨大别野'])
 		self.comboBox.setCurrentIndex(-1)
 

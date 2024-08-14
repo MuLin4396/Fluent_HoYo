@@ -1,5 +1,6 @@
 import asyncio
 import openpyxl
+from PyQt5.QtCore import QCoreApplication
 from aiohttp import ClientSession, ClientTimeout, ClientError
 import json
 import re
@@ -30,14 +31,14 @@ async def fetch(session, url):
 				print(f"请求失败，重试次数已用完：{e}")
 				raise
 
-async def spider_main(dynamic_id, file_path):
+async def spider_main(inputID, inputRequest, inputSave):
 	last_id = '0'
 	timeout = ClientTimeout(total=120)
 	count = 0
 	c = 0
 
 	try:
-		workbook = openpyxl.load_workbook(file_path)
+		workbook = openpyxl.load_workbook('spider_data.xlsx')
 		sheet = workbook.active
 	except FileNotFoundError:
 		workbook = openpyxl.Workbook()
@@ -47,7 +48,7 @@ async def spider_main(dynamic_id, file_path):
 
 	async with ClientSession(headers=headers, timeout=timeout) as session:
 		while True:
-			url = f'https://bbs-api.miyoushe.com/post/wapi/getPostReplies?gids=2&is_hot=false&last_id={last_id}&order_type=1&post_id={dynamic_id}&size=50'
+			url = f'https://bbs-api.miyoushe.com/post/wapi/getPostReplies?gids=2&is_hot=false&last_id={last_id}&order_type=1&post_id={inputID}&size={inputRequest}'
 			response = await fetch(session, url)
 			list = response['data']['list']
 
@@ -70,15 +71,16 @@ async def spider_main(dynamic_id, file_path):
 				ip = obj['user']['ip_region']
 
 				record_message(sheet, uid, ip, nickname, floor_id, time, content)
+				QCoreApplication.processEvents()
 				count += 1
 				c += 1
 
-				if count >= 100000:
-					workbook.save(file_path)
+				if count >= int(inputSave):
+					workbook.save('spider_data.xlsx')
 					count = 0
 					print('保存了一次工作簿')
 
 				print(time, floor_id)
 				print(c)
 
-		workbook.save(file_path)
+		workbook.save('spider_data.xlsx')
