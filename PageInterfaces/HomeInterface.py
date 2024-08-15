@@ -114,8 +114,6 @@ class DisplayCard(HeaderCardWidget):
 		self.flipView.setBorderRadius(4)
 		self.flipView.setSpacing(5)
 		self.flipView.setAspectRatioMode(Qt.AspectRatioMode.KeepAspectRatio)
-		self.flipView.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
-		self.flipView.installEventFilter(AcrylicToolTipFilter(self.flipView, 0, ToolTipPosition.TOP))
 
 		self.LoadImage(':Images/DisPlay_Png/', '*.png')
 		self.LoadImage(':Images/DisPlay_Jpg/', '*.jpg')
@@ -151,14 +149,6 @@ class GeneralSetting(GroupHeaderCardWidget):
 		self.setIntegerValidator(self.lineEdit_1, 0, 1000000000)
 		self.setIntegerValidator(self.lineEdit_2, 0, 50)
 		self.setIntegerValidator(self.lineEdit_3, 0, 100000)
-		self.comboBox.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
-		self.lineEdit_1.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
-		self.lineEdit_2.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
-		self.lineEdit_3.setToolTip("✨BanG Dream! It's MyGO!!!!!✨")
-		self.comboBox.installEventFilter(AcrylicToolTipFilter(self.comboBox, 0, ToolTipPosition.TOP))
-		self.lineEdit_1.installEventFilter(AcrylicToolTipFilter(self.lineEdit_1, 0, ToolTipPosition.TOP))
-		self.lineEdit_2.installEventFilter(AcrylicToolTipFilter(self.lineEdit_2, 0, ToolTipPosition.TOP))
-		self.lineEdit_3.installEventFilter(AcrylicToolTipFilter(self.lineEdit_3, 0, ToolTipPosition.TOP))
 		self.comboBox.addItems(['✨崩坏学园2', '✨崩坏3', '✨原神', '✨未定事件簿', '✨绝区零', '✨大别野'])
 		self.comboBox.setCurrentIndex(-1)
 
