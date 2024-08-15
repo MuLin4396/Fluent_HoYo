@@ -114,6 +114,8 @@ class DisplayCard(HeaderCardWidget):
 		self.flipView.setBorderRadius(4)
 		self.flipView.setSpacing(5)
 		self.flipView.setAspectRatioMode(Qt.AspectRatioMode.KeepAspectRatio)
+		self.flipView.setContextMenuPolicy(Qt.CustomContextMenu)
+		self.flipView.customContextMenuRequested.connect(self.showCommandBar)
 
 		self.LoadImage(':Images/DisPlay_Png/', '*.png')
 		self.LoadImage(':Images/DisPlay_Jpg/', '*.jpg')
@@ -128,6 +130,22 @@ class DisplayCard(HeaderCardWidget):
 			file_path = f'{directory}{filename}'
 			pixmap = QPixmap(file_path)
 			self.flipView.addImage(pixmap)
+
+	def showCommandBar(self, pos):
+		item = self.flipView.itemAt(pos)
+		if item is None: return
+		# item_rect = self.flipView.visualItemRect(item)
+		# global_pos = self.flipView.viewport().mapToGlobal(item_rect.center())
+		global_pos = self.flipView.viewport().mapToGlobal(pos)
+		commandBarView = CommandBarView(self)
+		commandBarView.addAction(Action(FluentIcon.SHARE, 'Share'))
+		commandBarView.addSeparator()
+		commandBarView.addAction(Action(FluentIcon.SAVE, 'Save'))
+		commandBarView.addAction(Action(FluentIcon.DELETE, 'Delete'))
+		commandBarView.addHiddenAction(Action(FluentIcon.APPLICATION, 'App', shortcut='Ctrl+A'))
+		commandBarView.addHiddenAction(Action(FluentIcon.SETTING, 'Settings', shortcut='Ctrl+S'))
+		commandBarView.resizeToSuitableWidth()
+		Flyout.make(commandBarView, global_pos, self, FlyoutAnimationType.FADE_IN)
 
 class GeneralSetting(GroupHeaderCardWidget):
 	def __init__(self, parent=None):
