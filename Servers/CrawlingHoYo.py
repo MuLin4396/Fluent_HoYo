@@ -54,13 +54,13 @@ async def spider_main(inputID, inputRequest, inputSave, compileAction):
 			list = response['data']['list']
 
 			if not list:
-				print('程序结束时间：', datetime.now())
+				compileAction.performAction(f"程序结束时间：{datetime.now()}")
 				break
 
 			for obj in list:
 				if obj == list[-1]:
 					last_id = obj['reply']['floor_id']
-					print('进入下一阶段', last_id)
+					compileAction.performAction(f"进入下一阶段{last_id}")
 
 				obj = json.loads(json.dumps(obj, ensure_ascii=False))
 				floor_id = obj['reply']['floor_id']
@@ -79,7 +79,7 @@ async def spider_main(inputID, inputRequest, inputSave, compileAction):
 				if count >= int(inputSave):
 					workbook.save('spider_data.xlsx')
 					count = 0
-					print('保存了一次工作簿')
+					compileAction.performAction('保存了一次工作簿')
 
 				compileAction.performAction(f'{time}    {floor_id}')
 				compileAction.performAction(f'{c}')
