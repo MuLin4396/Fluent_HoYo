@@ -1,6 +1,6 @@
 <div>
 <h1>
-    <img src="https://github.com/MuLin4396/Fluent_HoYo/blob/main/Images/DisPlay_Png/HoYo.png" align="right">
+    <img src="https://github.com/MuLin4396/Fluent_HoYo/blob/main/Images/DisPlay_Png/HoYo.png" align="right" width="200" height="200">
     Fluent-HoYo · 米游社评论区爬虫
 </h1>
 <p>

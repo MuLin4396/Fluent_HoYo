@@ -117,13 +117,13 @@ class DisplayCard(HeaderCardWidget):
 		self.flipView.setContextMenuPolicy(Qt.CustomContextMenu)
 		self.flipView.customContextMenuRequested.connect(self.showCommandBar)
 
-		self.LoadImage(':Images/DisPlay_Png/', '*.png')
-		self.LoadImage(':Images/DisPlay_Jpg/', '*.jpg')
+		self.loadImage(':Images/DisPlay_Png/', '*.png')
+		self.loadImage(':Images/DisPlay_Jpg/', '*.jpg')
 
 		self.viewLayout.addWidget(self.flipView)
 		self.viewLayout.setContentsMargins(10, 5, 10, 10)
 
-	def LoadImage(self, directory, pattern):
+	def loadImage(self, directory, pattern):
 		direct = QDir(directory)
 		files = direct.entryList([pattern], QDir.Files)
 		for filename in files:
@@ -208,7 +208,7 @@ class GeneralSetting(GroupHeaderCardWidget):
 		validator = QIntValidator(min_value, max_value, self)
 		line_edit.setValidator(validator)
 
-		def adjust_input():
+		def limitInput():
 			text = line_edit.text()
 			if text:
 				value = int(text)
@@ -217,4 +217,4 @@ class GeneralSetting(GroupHeaderCardWidget):
 				elif value > max_value:
 					line_edit.setText(str(max_value))
 
-		line_edit.textChanged.connect(adjust_input)
+		line_edit.textChanged.connect(limitInput)
