@@ -1,15 +1,14 @@
-import asyncio
+import threading
 import threading
 import time
 
-from PyQt5.QtCore import Qt, QCoreApplication, QDir, pyqtSignal, QThread, QObject
+from PyQt5.QtCore import Qt, QCoreApplication, QDir, pyqtSignal, QObject
 from PyQt5.QtGui import QPixmap, QIntValidator
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy, QWidget
-from qfluentwidgets import PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, InfoBarIcon, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, ToolTipPosition, Action, CommandBarView, FlyoutAnimationType, Flyout, themeColor
+from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy
+from qfluentwidgets import PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, ToolTipPosition, Action, CommandBarView, FlyoutAnimationType, Flyout, themeColor
 from qfluentwidgets.components.material import AcrylicSystemTrayMenu, AcrylicComboBox, AcrylicToolTipFilter
 
 from Servers.ActionController import ActionController
-from Servers.CrawlingHoYo import spider_main
 
 class HomeInterface(QFrame):
 	def __init__(self, text: str):
@@ -62,13 +61,13 @@ class CompileAction(QObject):
 		QCoreApplication.processEvents()
 
 	def startFunction(self):
+		self._is_paused = False
+		self._is_stopped = False
 		self.toggleButtonSignal.emit(True)
 		self.thread = threading.Thread(target=self.startTask)
 		self.thread.start()
 
 	def startTask(self):
-		self._is_paused = False
-		self._is_stopped = False
 		inputID = self.general_Setting.lineEdit_1.text()
 		inputRequest = self.general_Setting.lineEdit_2.text()
 		inputSave = self.general_Setting.lineEdit_3.text()
@@ -81,13 +80,13 @@ class CompileAction(QObject):
 		if bool(inputID) & bool(inputRequest) & bool(inputSave):
 			# asyncio.run(spider_main(inputID, inputRequest, inputSave, self.performAction))
 			for i in range(1000000):
-				if self._is_stopped:
-					break
 				while self._is_paused:
 					time.sleep(0.5)
 					pass
-				time.sleep(0.1)
+				if self._is_stopped:
+					break
 				self.updateTextSignal.emit(f'{i}')
+				time.sleep(0.1)
 		else:
 			self.updateTextSignal.emit('F')
 		self.toggleButtonSignal.emit(False)
@@ -103,9 +102,9 @@ class CompileAction(QObject):
 	def stopFunction(self):
 		self._is_paused = False
 		self._is_stopped = True
-		if self.thread is not None:
+		if self.thread is not None and self.thread.is_alive():
 			self.thread.join()
-			self.thread = None
+		self.thread = None
 		self.performAction('✨终止')
 
 	def retryFunction(self):
@@ -222,7 +221,7 @@ class GeneralSetting(GroupHeaderCardWidget):
 		self.action_1_5 = Action('✨长崎爽世', triggered=lambda: self.performAction('你也差不多该忘记了吧😒'))
 		self.action_1_6 = Action('✨椎名立希', triggered=lambda: self.performAction('那么那个乐团算什么😅'))
 		self.action_2_1 = Action('✨继续', triggered=lambda: self.action_Controller.resume(self.performAction))
-		self.action_2_2 = Action('✨停止', triggered=lambda: self.action_Controller.stop(self.performAction))
+		self.action_2_2 = Action('✨终止', triggered=lambda: self.action_Controller.stop(self.performAction))
 		self.action_2_3 = Action('✨重试', triggered=lambda: self.action_Controller.retry(self.performAction))
 		self.action_2_4 = Action("✨Ave Mujica", triggered=lambda: self.performAction("✨BanG Dream! Ave Mujica✨"))
 		self.action_2_5 = Action('✨三角初华', triggered=lambda: self.performAction('是会虚情假意呢🙄️'))
