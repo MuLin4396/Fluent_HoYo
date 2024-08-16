@@ -3,9 +3,8 @@ import json
 import asyncio
 import openpyxl
 
-from PyQt5.QtCore import QCoreApplication
-from aiohttp import ClientSession, ClientTimeout, ClientError
 from datetime import datetime
+from aiohttp import ClientSession, ClientTimeout, ClientError
 
 headers = {
 	'Referer'   : 'https://www.miyoushe.com/',
@@ -18,7 +17,7 @@ def record_message(sheet, uid, ip, nickname, floor_id, time, content):
 	row = [f'{nickname}', f'{uid}', f'{ip}', f'{floor_id}', f'{time}', f'{content}']
 	sheet.append(row)
 
-async def fetch(session, url, compileAction):
+async def fetch(session, url, performAction):
 	retries = 3
 	for i in range(retries):
 		try:
@@ -26,13 +25,13 @@ async def fetch(session, url, compileAction):
 				return await response.json()
 		except (ClientError, asyncio.TimeoutError) as e:
 			if i < retries - 1:
-				compileAction.performAction(f"请求失败，正在重试...（{i + 1}/{retries}）")
+				performAction(f"请求失败，正在重试...（{i + 1}/{retries}）")
 				await asyncio.sleep(2)
 			else:
-				compileAction.performAction(f"请求失败，重试次数已用完：{e}")
+				performAction(f"请求失败，重试次数已用完：{e}")
 				raise
 
-async def spider_main(inputID, inputRequest, inputSave, compileAction):
+async def spider_main(inputID, inputRequest, inputSave, performAction):
 	last_id = '0'
 	timeout = ClientTimeout(total=120)
 	count = 0
@@ -50,17 +49,17 @@ async def spider_main(inputID, inputRequest, inputSave, compileAction):
 	async with ClientSession(headers=headers, timeout=timeout) as session:
 		while True:
 			url = f'https://bbs-api.miyoushe.com/post/wapi/getPostReplies?gids=2&is_hot=false&last_id={last_id}&order_type=1&post_id={inputID}&size={inputRequest}'
-			response = await fetch(session, url, compileAction)
+			response = await fetch(session, url, performAction)
 			list = response['data']['list']
 
 			if not list:
-				compileAction.performAction(f"程序结束时间：{datetime.now()}")
+				performAction(f"程序结束时间：{datetime.now()}")
 				break
 
 			for obj in list:
 				if obj == list[-1]:
 					last_id = obj['reply']['floor_id']
-					compileAction.performAction(f"进入下一阶段{last_id}")
+					performAction(f"进入下一阶段{last_id}")
 
 				obj = json.loads(json.dumps(obj, ensure_ascii=False))
 				floor_id = obj['reply']['floor_id']
@@ -72,16 +71,14 @@ async def spider_main(inputID, inputRequest, inputSave, compileAction):
 				ip = obj['user']['ip_region']
 
 				record_message(sheet, uid, ip, nickname, floor_id, time, content)
-				QCoreApplication.processEvents()
 				count += 1
 				c += 1
 
 				if count >= int(inputSave):
 					workbook.save('spider_data.xlsx')
 					count = 0
-					compileAction.performAction('保存了一次工作簿')
+					performAction('保存了一次工作簿')
 
-				compileAction.performAction(f'{time}    {floor_id}')
-				compileAction.performAction(f'{c}')
+				performAction(f'{time}    {floor_id}\n{c}')
 
 		workbook.save('spider_data.xlsx')
