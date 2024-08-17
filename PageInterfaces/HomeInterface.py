@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt, QCoreApplication, QDir, pyqtSignal, QObject
 from PyQt5.QtGui import QPixmap, QIntValidator
 from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy
 from qfluentwidgets import PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, ToolTipPosition, Action, CommandBarView, FlyoutAnimationType, Flyout, themeColor
-from qfluentwidgets.components.material import AcrylicSystemTrayMenu, AcrylicComboBox, AcrylicToolTipFilter
+from qfluentwidgets.components.material import AcrylicSystemTrayMenu, AcrylicToolTipFilter, AcrylicEditableComboBox
 
 from Servers.ActionController import ActionController
 from Servers.CrawlingHoYo import spider_main
@@ -69,13 +69,14 @@ class CompileAction(QObject):
 		self.thread.start()
 
 	def startTask(self):
+		inputName = self.general_Setting.comboBox.text()
 		inputID = self.general_Setting.lineEdit_1.text()
 		inputRequest = self.general_Setting.lineEdit_2.text()
 		inputSave = self.general_Setting.lineEdit_3.text()
-		self.updateTextSignal.emit(f'✨启动\n\t动态ID值:{inputID}\n\t单次请求数:{inputRequest}\n\t单轮保存数:{inputSave}')
+		self.updateTextSignal.emit(f'✨启动\n\t命名:{inputName}\n\t动态ID值:{inputID}\n\t单次请求数:{inputRequest}\n\t单轮保存数:{inputSave}')
 
-		if bool(inputID) & bool(inputRequest) & bool(inputSave):
-			asyncio.run(spider_main(self.action_Controller, inputID, inputRequest, inputSave, self.performAction))
+		if bool(inputName) & bool(inputID) & bool(inputRequest) & bool(inputSave):
+			asyncio.run(spider_main(self.action_Controller, inputName, inputID, inputRequest, inputSave, self.performAction))
 		# if not self._is_paused:
 		# 	for i in range(1000000):
 		# 		while self._is_paused:
@@ -106,8 +107,8 @@ class CompileAction(QObject):
 		self.performAction('✨终止')
 
 	def retryFunction(self):
-		self.stopFunction()
 		self.performAction('✨重启')
+		self.stopFunction()
 		self.startFunction()
 
 class TextEdit(HeaderCardWidget):
@@ -186,7 +187,7 @@ class GeneralSetting(GroupHeaderCardWidget):
 		super().__init__(parent)
 		self.setTitle('⚙️  配 置')
 
-		self.comboBox = AcrylicComboBox(self)
+		self.comboBox = AcrylicEditableComboBox(self)
 		self.lineEdit_1 = LineEdit(self)
 		self.lineEdit_2 = LineEdit(self)
 		self.lineEdit_3 = LineEdit(self)
@@ -221,7 +222,7 @@ class GeneralSetting(GroupHeaderCardWidget):
 		self.action_2_1 = Action('✨继续', triggered=lambda: self.action_Controller.resume(self.performAction))
 		self.action_2_2 = Action('✨终止', triggered=lambda: self.action_Controller.stop(self.performAction))
 		self.action_2_3 = Action('✨重试', triggered=lambda: self.action_Controller.retry(self.performAction))
-		self.action_2_4 = Action("✨Ave Mujica", triggered=lambda: self.performAction("✨BanG Dream! Ave Mujica✨"))
+		self.action_2_4 = Action('✨Ave Mujica', triggered=lambda: self.performAction('✨BanG Dream! Ave Mujica✨'))
 		self.action_2_5 = Action('✨三角初华', triggered=lambda: self.performAction('是会虚情假意呢🙄️'))
 		self.action_2_6 = Action('✨若叶睦', triggered=lambda: self.performAction('想演奏是你们的自由，你们就请便吧🖐'))
 		self.action_2_7 = Action('✨八幡海铃', triggered=lambda: self.performAction('到现在都还执着于过去，真难看🙄️'))
@@ -230,8 +231,8 @@ class GeneralSetting(GroupHeaderCardWidget):
 		self.menu_Button_1.addActions([self.action_1_1, self.action_1_2, self.action_1_3, self.action_1_4, self.action_1_5])
 		self.menu_Button_2.addActions([self.action_2_1, self.action_2_2, self.action_2_3, self.action_2_4, self.action_2_5, self.action_2_6, self.action_2_7, self.action_2_8, self.action_2_9])
 
-		self.compileButton_Run = PrimarySplitPushButton("✨运行✨")
-		self.compileButton_Stop = PrimarySplitPushButton("✨暂停✨")
+		self.compileButton_Run = PrimarySplitPushButton('✨运行✨')
+		self.compileButton_Stop = PrimarySplitPushButton('✨暂停✨')
 		self.compileButton_Run.setFlyout(self.menu_Button_1)
 		self.compileButton_Stop.setFlyout(self.menu_Button_2)
 		self.compileButton_Run.clicked.connect(lambda: self.action_Controller.start(self.performAction))
@@ -254,7 +255,7 @@ class GeneralSetting(GroupHeaderCardWidget):
 		self.bottomLayout.addWidget(self.compileButton_Run)
 		self.bottomLayout.addWidget(self.compileButton_Stop)
 
-		self.addGroup(FluentIcon.PIN, '动态分区', '✨选择动态所在的分区', self.comboBox)
+		self.addGroup(FluentIcon.PIN, '文件命名', '✨选择或输入文件名', self.comboBox)
 		self.addGroup(FluentIcon.LABEL, '动态 ID 值', '✨输入动态ID值', self.lineEdit_1)
 		self.addGroup(FluentIcon.LABEL, '单次请求数', '✨输入单次请求数量', self.lineEdit_2)
 		self.addGroup(FluentIcon.LABEL, '单轮保存数', '✨输入单轮保存数', self.lineEdit_3)

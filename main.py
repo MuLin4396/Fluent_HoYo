@@ -1,5 +1,4 @@
 import sys
-import Images
 
 from PyQt5.QtCore import QSize, QEventLoop, QTimer, Qt
 from PyQt5.QtGui import QIcon
@@ -22,7 +21,7 @@ class MainWindow(MSFluentWindow):
 		self.setMinimumWidth(1400)
 		self.setMinimumHeight(800)
 		self.setWindowTitle('米游社评论区抓取工具')
-		self.setWindowIcon(QIcon(":Images/DisPlay_Png/HoYo.png"))
+		self.setWindowIcon(QIcon(':Images/DisPlay_Png/HoYo.png'))
 		# 居中界面
 		desktop = QApplication.desktop().availableGeometry()
 		width, high = desktop.width(), desktop.height()
