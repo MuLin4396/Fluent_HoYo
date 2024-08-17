@@ -9,23 +9,30 @@ class ActionController(QObject):
 
 	def __init__(self, parent=None):
 		super().__init__(parent)
+		self._is_paused = None
+		self._is_stopped = None
+
+	def set_control_events(self, is_paused, is_stopped):
+		self._is_paused = is_paused
+		self._is_stopped = is_stopped
 
 	def start(self, performAction):
-		performAction('启动！')
+		self._is_paused.clear()
+		self._is_stopped.clear()
 		self.startSignal.emit()
 
 	def pause(self, performAction):
-		performAction('暂停')
+		self._is_paused.set()
 		self.pauseSignal.emit()
 
 	def resume(self, performAction):
-		performAction('继续')
+		self._is_paused.clear()
 		self.resumeSignal.emit()
 
 	def stop(self, performAction):
-		performAction('终止')
+		self._is_paused.clear()
+		self._is_stopped.set()
 		self.stopSignal.emit()
 
 	def retry(self, performAction):
-		performAction('重启')
 		self.retrySignal.emit()
