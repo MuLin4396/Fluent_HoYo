@@ -4,7 +4,7 @@ import threading
 from PyQt5.QtCore import Qt, QCoreApplication, QDir, pyqtSignal, QObject
 from PyQt5.QtGui import QPixmap, QIntValidator
 from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy
-from qfluentwidgets import PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, ToolTipPosition, Action, CommandBarView, FlyoutAnimationType, Flyout, themeColor
+from qfluentwidgets import PlainTextEdit, BodyLabel, GroupHeaderCardWidget, FluentIcon, IconWidget, LineEdit, HeaderCardWidget, HorizontalFlipView, PrimarySplitPushButton, ToolTipPosition, Action, CommandBarView, FlyoutAnimationType, Flyout, themeColor, LargeTitleLabel
 from qfluentwidgets.components.material import AcrylicSystemTrayMenu, AcrylicToolTipFilter, AcrylicEditableComboBox
 
 from Servers.ActionController import ActionController
@@ -15,6 +15,7 @@ class HomeInterface(QFrame):
 		super().__init__()
 		self.setObjectName(text)
 
+		self.label = LargeTitleLabel(text)
 		self.plain_TextEdit = TextEdit(self)
 		self.general_Setting = GeneralSetting(self)
 		self.display_Card = DisplayCard(self)
@@ -31,6 +32,7 @@ class HomeInterface(QFrame):
 		self.horizontalLayout_1.addLayout(self.verticalLayout_1)
 		self.horizontalLayout_1.addWidget(self.plain_TextEdit)
 		self.horizontalLayout_2.addLayout(self.horizontalLayout_1)
+		self.verticalLayout_1.addWidget(self.label)
 		self.verticalLayout_1.addWidget(self.general_Setting)
 		self.verticalLayout_1.addWidget(self.display_Card)
 		self.verticalLayout_1.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
