@@ -1,6 +1,5 @@
+import asyncio
 import threading
-import threading
-import time
 
 from PyQt5.QtCore import Qt, QCoreApplication, QDir, pyqtSignal, QObject
 from PyQt5.QtGui import QPixmap, QIntValidator
@@ -9,6 +8,7 @@ from qfluentwidgets import PlainTextEdit, BodyLabel, GroupHeaderCardWidget, Flue
 from qfluentwidgets.components.material import AcrylicSystemTrayMenu, AcrylicComboBox, AcrylicToolTipFilter
 
 from Servers.ActionController import ActionController
+from Servers.CrawlingHoYo import spider_main
 
 class HomeInterface(QFrame):
 	def __init__(self, text: str):
@@ -52,8 +52,9 @@ class CompileAction(QObject):
 		self.action_Controller.stopSignal.connect(self.stopFunction)
 		self.action_Controller.retrySignal.connect(self.retryFunction)
 
-		self._is_paused = False
-		self._is_stopped = False
+		self._is_paused = threading.Event()
+		self._is_stopped = threading.Event()
+		self.action_Controller.set_control_events(self._is_paused, self._is_stopped)
 		self.thread = threading.Thread()
 
 	def performAction(self, text):
@@ -61,8 +62,8 @@ class CompileAction(QObject):
 		QCoreApplication.processEvents()
 
 	def startFunction(self):
-		self._is_paused = False
-		self._is_stopped = False
+		self._is_paused.clear()
+		self._is_stopped.clear()
 		self.toggleButtonSignal.emit(True)
 		self.thread = threading.Thread(target=self.startTask)
 		self.thread.start()
@@ -71,37 +72,34 @@ class CompileAction(QObject):
 		inputID = self.general_Setting.lineEdit_1.text()
 		inputRequest = self.general_Setting.lineEdit_2.text()
 		inputSave = self.general_Setting.lineEdit_3.text()
-		self.updateTextSignal.emit(
-				f'✨启动'
-				f'\n        动态ID值:{inputID}'
-				f'\n        单次请求数:{inputRequest}'
-				f'\n        单轮保存数:{inputSave}'
-		)
+		self.updateTextSignal.emit(f'✨启动\n\t动态ID值:{inputID}\n\t单次请求数:{inputRequest}\n\t单轮保存数:{inputSave}')
+
 		if bool(inputID) & bool(inputRequest) & bool(inputSave):
-			# asyncio.run(spider_main(inputID, inputRequest, inputSave, self.performAction))
-			for i in range(1000000):
-				while self._is_paused:
-					time.sleep(0.5)
-					pass
-				if self._is_stopped:
-					break
-				self.updateTextSignal.emit(f'{i}')
-				time.sleep(0.1)
+			asyncio.run(spider_main(self.action_Controller, inputID, inputRequest, inputSave, self.performAction))
+		# if not self._is_paused:
+		# 	for i in range(1000000):
+		# 		while self._is_paused:
+		# 			time.sleep(0.5)
+		# 			pass
+		# 		if self._is_stopped:
+		# 			break
+		# 		self.updateTextSignal.emit(f'{i}')
+		# 		time.sleep(0.1)
 		else:
 			self.updateTextSignal.emit('F')
 		self.toggleButtonSignal.emit(False)
 
 	def pauseFunction(self):
-		self._is_paused = True
+		self._is_paused.set()
 		self.performAction('✨暂停')
 
 	def resumeFunction(self):
-		self._is_paused = False
+		self._is_paused.clear()
 		self.performAction('✨继续')
 
 	def stopFunction(self):
-		self._is_paused = False
-		self._is_stopped = True
+		self._is_paused.clear()
+		self._is_stopped.set()
 		if self.thread is not None and self.thread.is_alive():
 			self.thread.join()
 		self.thread = None
@@ -118,6 +116,7 @@ class TextEdit(HeaderCardWidget):
 		self.setTitle('📄  运 行')
 
 		self.plain_TextEdit = PlainTextEdit(self)
+		self.scrollbar = self.plain_TextEdit.verticalScrollBar()
 
 		self.plain_TextEdit.setReadOnly(True)
 		self.plain_TextEdit.setContextMenuPolicy(Qt.CustomContextMenu)
@@ -128,6 +127,7 @@ class TextEdit(HeaderCardWidget):
 
 	def appendPlainText(self, text):
 		self.plain_TextEdit.appendPlainText(text)
+		self.scrollbar.setValue(self.scrollbar.maximum())
 
 	def showCommandBar(self, pos):
 		commandBarView = CommandBarView(self)
@@ -170,8 +170,6 @@ class DisplayCard(HeaderCardWidget):
 	def showCommandBar(self, pos):
 		item = self.flipView.itemAt(pos)
 		if item is None: return
-		# item_rect = self.flipView.visualItemRect(item)
-		# global_pos = self.flipView.viewport().mapToGlobal(item_rect.center())
 		global_pos = self.flipView.viewport().mapToGlobal(pos)
 		commandBarView = CommandBarView(self)
 		commandBarView.addAction(Action(FluentIcon.SHARE, 'Share'))
