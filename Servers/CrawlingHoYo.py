@@ -38,7 +38,7 @@ async def spider_main(action_Controller, inputName, inputID, inputRequest, input
 	c = 0
 
 	try:
-		workbook = openpyxl.load_workbook('spider_data.xlsx')
+		workbook = openpyxl.load_workbook(f'{inputName}.xlsx')
 		sheet = workbook.active
 	except FileNotFoundError:
 		workbook = openpyxl.Workbook()
