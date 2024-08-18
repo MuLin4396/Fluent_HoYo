@@ -1,8 +1,7 @@
-from qfluentwidgets import QConfig, ConfigItem, BoolValidator, qconfig, Theme
+from qfluentwidgets import QConfig, qconfig, Theme
 
 class Config(QConfig):
-	enableAcrylicBackgroundCard = ConfigItem('personalGroup', 'enableAcrylicBackgroundCard', True, BoolValidator())
-# themeModeCard = ConfigItem('personalGroup', 'themeModeCard', True, BoolValidator())
+	pass
 
 config = Config()
 config.themeMode.value = Theme.DARK
