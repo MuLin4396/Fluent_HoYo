@@ -1,4 +1,5 @@
 import sys
+import Images
 
 from PyQt5.QtCore import QSize, QEventLoop, QTimer, Qt
 from PyQt5.QtGui import QIcon
