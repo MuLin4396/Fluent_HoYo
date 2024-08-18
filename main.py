@@ -1,13 +1,12 @@
 import sys
-import Images
 
 from PyQt5.QtCore import QSize, QEventLoop, QTimer, Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
-from qfluentwidgets import MSFluentWindow, setTheme, Theme, SplashScreen, FluentIcon, NavigationItemPosition, NavigationBarPushButton, toggleTheme
+from qfluentwidgets import MSFluentWindow, SplashScreen, FluentIcon, NavigationItemPosition
 
-from PageInterfaces.HomeInterface import HomeInterface
 from PageInterfaces.CrawlerInterface import CrawlerInterface
+from PageInterfaces.HomeInterface import HomeInterface
 from PageInterfaces.SettingInterface import SettingInterface
 
 class MainWindow(MSFluentWindow):
@@ -18,7 +17,6 @@ class MainWindow(MSFluentWindow):
 	# 主界面
 	def initWindow(self):
 		# 主界面配置
-		setTheme(Theme.DARK)
 		self.resize(1400, 800)
 		self.setMinimumWidth(1400)
 		self.setMinimumHeight(800)
@@ -50,7 +48,6 @@ class MainWindow(MSFluentWindow):
 		# 侧边栏配置
 		self.addSubInterface(self.homeInterface, FluentIcon.HOME, '首页', FluentIcon.HOME_FILL, NavigationItemPosition.TOP)
 		self.addSubInterface(self.crawlerInterface, FluentIcon.LABEL, '爬虫', FluentIcon.LABEL, NavigationItemPosition.TOP)
-		self.navigationInterface.addWidget('theme', self.themeInterface, lambda: toggleTheme(lazy=True), NavigationItemPosition.BOTTOM)
 		self.addSubInterface(self.settingInterface, FluentIcon.SETTING, '设置', FluentIcon.SETTING, NavigationItemPosition.BOTTOM)
 		# 1000ms延时
 		self.initDelay(2000)
@@ -61,7 +58,6 @@ class MainWindow(MSFluentWindow):
 		self.homeInterface = HomeInterface('HomeInterface')
 		self.crawlerInterface = CrawlerInterface('CrawlerInterface')
 		self.settingInterface = SettingInterface('SettingInterface')
-		self.themeInterface = NavigationBarPushButton(FluentIcon.BRUSH, '主题', False)
 
 	# 延时
 	def initDelay(self, time: int):
