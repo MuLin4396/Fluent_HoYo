@@ -4,13 +4,14 @@ import Images
 from PyQt5.QtCore import QSize, QEventLoop, QTimer, Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
-from qfluentwidgets import MSFluentWindow, SplashScreen, FluentIcon, NavigationItemPosition
+from qfluentwidgets import FluentWindow, SplashScreen, FluentIcon, NavigationItemPosition
 
 from PageInterfaces.CrawlerInterface import CrawlerInterface
 from PageInterfaces.HomeInterface import HomeInterface
 from PageInterfaces.SettingInterface import SettingInterface
+from PageInterfaces.TestInterface import TestInterface
 
-class MainWindow(MSFluentWindow):
+class MainWindow(FluentWindow):
 	def __init__(self):
 		super().__init__()
 		self.initWindow()
@@ -46,9 +47,12 @@ class MainWindow(MSFluentWindow):
 		# 加载子界面
 		self.initPageInterface()
 		# 侧边栏配置
-		self.addSubInterface(self.homeInterface, FluentIcon.HOME, '首页', FluentIcon.HOME_FILL, NavigationItemPosition.TOP)
-		self.addSubInterface(self.crawlerInterface, FluentIcon.LABEL, '爬虫', FluentIcon.LABEL, NavigationItemPosition.TOP)
-		self.addSubInterface(self.settingInterface, FluentIcon.SETTING, '设置', FluentIcon.SETTING, NavigationItemPosition.BOTTOM)
+		self.addSubInterface(self.homeInterface, FluentIcon.HOME, '首页', NavigationItemPosition.TOP)
+		self.addSubInterface(self.crawlerInterface, FluentIcon.LABEL, '爬虫', NavigationItemPosition.TOP)
+		self.navigationInterface.addSeparator()
+		self.addSubInterface(self.testInterface, FluentIcon.BRUSH, '测试', NavigationItemPosition.SCROLL)
+		self.addSubInterface(self.settingInterface, FluentIcon.SETTING, '设置', NavigationItemPosition.BOTTOM)
+		self.navigationInterface.setExpandWidth(200)
 		# 1000ms延时
 		self.initDelay(2000)
 
@@ -57,6 +61,7 @@ class MainWindow(MSFluentWindow):
 		# 加载子界面
 		self.homeInterface = HomeInterface('HomeInterface')
 		self.crawlerInterface = CrawlerInterface('CrawlerInterface')
+		self.testInterface = TestInterface('TestInterface')
 		self.settingInterface = SettingInterface('SettingInterface')
 
 	# 延时
