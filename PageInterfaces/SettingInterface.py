@@ -1,25 +1,32 @@
 from PyQt5.QtWidgets import QFrame, QWidget, QVBoxLayout
 from qfluentwidgets import ExpandLayout, SettingCardGroup, FluentIcon, OptionsSettingCard, LargeTitleLabel, setTheme, CustomColorSettingCard, setThemeColor
+
 from Config.Config import config
 
 class SettingInterface(QFrame):
-	def __init__(self, text: str):
-		super().__init__()
+	def __init__(self, text: str, parent=None):
+		super().__init__(parent=parent)
 		self.setObjectName(text)
 
 		self.hBoxLayout = QVBoxLayout(self)
 		self.scrollWidget = QWidget()
 		self.expandLayout = ExpandLayout(self.scrollWidget)
-		self.settingLabel = LargeTitleLabel(text)
 
+		self.settingLabel = LargeTitleLabel('设置', self.scrollWidget)
 		self.personalGroup = SettingCardGroup('个性化', self.scrollWidget)
+		self.experimentalGroup = SettingCardGroup('实验性功能', self.scrollWidget)
+
 		self.themeCard = OptionsSettingCard(config.themeMode, FluentIcon.BRUSH, '主题模式', '改变主题模式', texts=['亮色', '深色', '跟随系统设置'])
 		self.themeColorCard = CustomColorSettingCard(config.themeColor, FluentIcon.PALETTE, '主题颜色', '改变主题颜色')
 
 		self.personalGroup.addSettingCard(self.themeCard)
-		self.personalGroup.addSettingCard(self.themeColorCard)
+		self.experimentalGroup.addSettingCard(self.themeColorCard)
+
+		self.expandLayout.setSpacing(30)
+		self.expandLayout.addWidget(self.settingLabel)
 		self.expandLayout.addWidget(self.personalGroup)
-		self.hBoxLayout.addWidget(self.settingLabel)
+		self.expandLayout.addWidget(self.experimentalGroup)
+
 		self.hBoxLayout.addWidget(self.scrollWidget)
 
 		self.__connectSignalToSlot()

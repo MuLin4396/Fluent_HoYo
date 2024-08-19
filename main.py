@@ -19,8 +19,7 @@ class MainWindow(MSFluentWindow):
 	def initWindow(self):
 		# 主界面配置
 		self.resize(1400, 800)
-		self.setMinimumWidth(1400)
-		self.setMinimumHeight(800)
+		self.setMinimumSize(1400, 800)
 		self.setWindowTitle('米游社评论区抓取工具')
 		self.setWindowIcon(QIcon(':Images/DisPlay_Png/HoYo.png'))
 		# 居中界面
