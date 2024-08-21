@@ -193,7 +193,7 @@ class GeneralSetting(GroupHeaderCardWidget):
 		self.compileButton_Run.setEnabled(True)
 		self.compileButton_Stop.setEnabled(False)
 
-		self.hintIcon = IconWidget(FluentIcon.INFO.icon(color=themeColor()))
+		self.hintIcon = IconWidget(FluentIcon.INFO)
 		self.hintLabel = BodyLabel('控制运行🤣👉')
 		self.hintIcon.setFixedSize(16, 16)
 

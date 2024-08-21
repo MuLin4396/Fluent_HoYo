@@ -12,7 +12,7 @@ class SettingInterface(QFrame):
 		self.scrollWidget = QWidget()
 		self.expandLayout = ExpandLayout(self.scrollWidget)
 
-		self.settingLabel = LargeTitleLabel('设置', self.scrollWidget)
+		self.settingLabel = LargeTitleLabel(text)
 		self.personalGroup = SettingCardGroup('个性化', self.scrollWidget)
 		self.experimentalGroup = SettingCardGroup('实验性功能', self.scrollWidget)
 
@@ -23,10 +23,10 @@ class SettingInterface(QFrame):
 		self.experimentalGroup.addSettingCard(self.themeColorCard)
 
 		self.expandLayout.setSpacing(30)
-		self.expandLayout.addWidget(self.settingLabel)
 		self.expandLayout.addWidget(self.personalGroup)
 		self.expandLayout.addWidget(self.experimentalGroup)
 
+		self.hBoxLayout.addWidget(self.settingLabel)
 		self.hBoxLayout.addWidget(self.scrollWidget)
 
 		self.__connectSignalToSlot()
