@@ -1,70 +1,54 @@
 import sys
 import Images
 
-from PyQt5.QtCore import QSize, QEventLoop, QTimer, Qt
-from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QSize, QEventLoop, QTimer, QUrl, Qt
+from PyQt5.QtGui import QDesktopServices, QIcon
 from PyQt5.QtWidgets import QApplication
-from qfluentwidgets import FluentWindow, SplashScreen, FluentIcon, NavigationItemPosition
+from qfluentwidgets import FluentWindow, MessageBox, NavigationWidget, SplashScreen, FluentIcon, NavigationItemPosition, Theme, setTheme
 
 from PageInterfaces.CrawlerInterface import CrawlerInterface
-from PageInterfaces.HomeInterface import HomeInterface
-from PageInterfaces.SettingInterface import SettingInterface
 from PageInterfaces.TestInterface import TestInterface
+from PageInterfaces.HomeInterface import HomeInterface
 
 class MainWindow(FluentWindow):
 	def __init__(self):
 		super().__init__()
-		self.initWindow()
+		setTheme(Theme.DARK)
 
-	# 主界面
+		self.homeInterface = HomeInterface('HomeInterface')
+		self.crawlerInterface = CrawlerInterface('CrawlerInterface')
+		self.testInterface = TestInterface('TestInterface')
+		self.splashScreen = SplashScreen(':Images/DisPlay_Png/HoYo.png', self)
+
+		self.initWindow()
+		self.initSplashScreen()
+		self.initNavigation()
+
+		self.splashScreen.finish()
+
 	def initWindow(self):
-		# 主界面配置
 		self.resize(1400, 800)
 		self.setMinimumSize(1400, 800)
 		self.setWindowTitle('米游社评论区抓取工具')
 		self.setWindowIcon(QIcon(':Images/DisPlay_Png/HoYo.png'))
-		# 居中界面
+
 		desktop = QApplication.desktop().availableGeometry()
 		width, high = desktop.width(), desktop.height()
 		self.move((width - self.width()) // 2, (high - self.height()) // 2)
-		# 加载启动界面
-		self.initSplashScreen()
 
-	# 启动界面
 	def initSplashScreen(self):
-		# 启动界面配置
-		self.splashScreen = SplashScreen(self.windowIcon(), self)
 		self.splashScreen.setIconSize(QSize(102, 102))
-		# 100ms延时
 		self.initDelay(100)
-		# 加载侧边栏&关闭启动界面
 		self.show()
-		self.initNavigation()
-		self.splashScreen.finish()
 
-	# 侧边栏
 	def initNavigation(self):
-		# 加载子界面
-		self.initPageInterface()
-		# 侧边栏配置
 		self.addSubInterface(self.homeInterface, FluentIcon.HOME, '首页', NavigationItemPosition.TOP)
 		self.addSubInterface(self.crawlerInterface, FluentIcon.LABEL, '爬虫', NavigationItemPosition.TOP)
 		self.navigationInterface.addSeparator()
 		self.addSubInterface(self.testInterface, FluentIcon.BRUSH, '测试', NavigationItemPosition.SCROLL)
-		self.addSubInterface(self.settingInterface, FluentIcon.SETTING, '设置', NavigationItemPosition.BOTTOM)
-		self.navigationInterface.setExpandWidth(200)
-		# 1000ms延时
+
 		self.initDelay(2000)
 
-	# 子界面
-	def initPageInterface(self):
-		# 加载子界面
-		self.homeInterface = HomeInterface('HomeInterface')
-		self.crawlerInterface = CrawlerInterface('CrawlerInterface')
-		self.testInterface = TestInterface('TestInterface')
-		self.settingInterface = SettingInterface('SettingInterface')
-
-	# 延时
 	def initDelay(self, time: int):
 		loop = QEventLoop(self)
 		QTimer.singleShot(time, loop.quit)
@@ -73,22 +57,22 @@ class MainWindow(FluentWindow):
 class HighDpiScaleFactorRoundingPolicy:
 	def __init__(self):
 		super().__init__()
-		# 自适应分辨率
 		QApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
 		QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
 		QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
 
 def main():
-	# 主函数
 	HighDpiScaleFactorRoundingPolicy()
 	app = QApplication(sys.argv)
 	window = MainWindow()
 	window.show()
 	sys.exit(app.exec_())
 
-# pyinstaller -i .\Images\DisPlay_Png\HoYo.png -w -F .\main.py
-# name = 'Fluent_HoYo_Window',
-# pyinstaller  main.spec
+'''
+pyinstaller -i .\Images\DisPlay_Png\HoYo.png -w -F .\main.py
+name = 'Fluent_HoYo_Window',
+pyinstaller  main.spec
+'''
 
 if __name__ == '__main__':
 	main()
