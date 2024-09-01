@@ -1,10 +1,12 @@
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout
-from qfluentwidgets import ElevatedCardWidget, IconWidget, BodyLabel, CaptionLabel, PushButton, TransparentToolButton, FluentIcon, ImageLabel
+from PyQt5.QtCore import QUrl, Qt
+from PyQt5.QtGui import QDesktopServices
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from future import StyleSheet
+from qfluentwidgets import ElevatedCardWidget, FlowLayout, IconWidget, BodyLabel, CaptionLabel, PushButton, TransparentToolButton, FluentIcon, ImageLabel
 
 class SampleCard(ElevatedCardWidget):
 
-	def __init__(self, icon, title, content, parent=None):
+	def __init__(self, icon, title, content, url, parent=None):
 		super().__init__(parent)
 		self.iconWidget = IconWidget(icon)
 		self.titleLabel = BodyLabel(title, self)
@@ -28,12 +30,37 @@ class SampleCard(ElevatedCardWidget):
 		self.vBoxLayout.setAlignment(Qt.AlignVCenter)
 		self.hBoxLayout.addLayout(self.vBoxLayout)
 
+		self.clicked.connect(lambda: QDesktopServices.openUrl(QUrl(url)))
+
+class SampleCardView(QWidget):
+	def __init__(self, title: str, parent=None):
+		super().__init__(parent=parent)
+		self.titleLabel = QLabel(title, self)
+		self.vBoxLayout = QVBoxLayout(self)
+		self.flowLayout = FlowLayout()
+
+		self.vBoxLayout.setContentsMargins(36, 0, 36, 0)
+		self.vBoxLayout.setSpacing(10)
+		self.flowLayout.setContentsMargins(0, 0, 0, 0)
+		self.flowLayout.setHorizontalSpacing(12)
+		self.flowLayout.setVerticalSpacing(12)
+
+		self.vBoxLayout.addWidget(self.titleLabel)
+		self.vBoxLayout.addLayout(self.flowLayout, 1)
+
+		self.titleLabel.setObjectName('viewTitleLabel')
+		StyleSheet.SAMPLE_CARD.apply(self)
+
+	def addSampleCard(self, icon, title, content, url):
+		card = SampleCard(icon, title, content, url, self)
+		self.flowLayout.addWidget(card)
+
 class EmojiCard(ElevatedCardWidget):
 
-	def __init__(self, iconPath: str, name: str, parent=None):
+	def __init__(self, icon, title, url, parent=None):
 		super().__init__(parent)
-		self.iconWidget = ImageLabel(iconPath, self)
-		self.label = CaptionLabel(name, self)
+		self.iconWidget = ImageLabel(icon, self)
+		self.label = CaptionLabel(title, self)
 
 		self.iconWidget.scaledToHeight(68)
 
@@ -44,4 +71,7 @@ class EmojiCard(ElevatedCardWidget):
 		self.vBoxLayout.addStretch(1)
 		self.vBoxLayout.addWidget(self.label, 0, Qt.AlignHCenter | Qt.AlignBottom)
 
-		self.setFixedSize(168, 176)
+		# self.setFixedSize(168, 176)
+		self.setFixedHeight(180)
+
+		self.clicked.connect(lambda: QDesktopServices.openUrl(QUrl(url)))
