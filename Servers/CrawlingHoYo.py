@@ -17,6 +17,35 @@ def record_message(sheet, uid, ip, nickname, floor_id, time, content):
 	row = [f'{nickname}', f'{uid}', f'{ip}', f'{floor_id}', f'{time}', f'{content}']
 	sheet.append(row)
 
+def getPostReplies(obj):
+	floor_id = obj['reply']['floor_id']
+	content = _RE.sub(r'', obj['reply']['content'])
+	date_time = obj['reply']['updated_at']
+	time = datetime.fromtimestamp(date_time)
+	uid = obj['reply']['uid']
+	nickname = obj['user']['nickname']
+	ip = obj['user']['ip_region']
+	sub_reply_count = obj['sub_reply_count']
+	return uid, ip, nickname, floor_id, time, content, sub_reply_count
+
+async def getSubReplies(sheet, timeout, floor_id, post_id, inputRequest, performAction):
+	last_id = '0'
+	while True:
+		async with ClientSession(headers=headers, timeout=timeout) as session:
+			url = f'https://bbs-api.miyoushe.com/post/wapi/getSubReplies?floor_id={floor_id}&gids=2&last_id={last_id}&post_id={post_id}&size={inputRequest}'
+			response = await fetch(session, url, performAction)
+			list = response['data']['list']
+			if not list:
+				performAction(f'子评论结束：{datetime.now()}')
+				break
+			for obj in list:
+				if obj == list[-1]:
+					last_id = response['data']['last_id']
+					print(last_id)
+				obj = json.loads(json.dumps(obj, ensure_ascii=False))
+				uid, ip, nickname, floor_id, time, content, sub_reply_count = getPostReplies(obj)
+				record_message(sheet, uid, ip, nickname, floor_id, time, content)
+
 async def fetch(session, url, performAction):
 	retries = 3
 	for i in range(retries):
@@ -69,13 +98,11 @@ async def spider_main(action_Controller, inputName, inputID, inputRequest, input
 					performAction(f'进入下一阶段{last_id}')
 
 				obj = json.loads(json.dumps(obj, ensure_ascii=False))
-				floor_id = obj['reply']['floor_id']
-				content = _RE.sub(r'', obj['reply']['content'])
-				date_time = obj['reply']['updated_at']
-				time = datetime.fromtimestamp(date_time)
-				uid = obj['reply']['uid']
-				nickname = obj['user']['nickname']
-				ip = obj['user']['ip_region']
+
+				uid, ip, nickname, floor_id, time, content, sub_reply_count = getPostReplies(obj)
+
+				if not sub_reply_count == 0:
+					await getSubReplies(sheet, timeout, floor_id, inputID, inputRequest, performAction)
 
 				record_message(sheet, uid, ip, nickname, floor_id, time, content)
 				count += 1
